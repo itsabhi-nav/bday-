@@ -25,7 +25,7 @@ export const siteConfig = {
   relationshipStart: "January 2022",
   heroHeadline: "Happy Birthday",
   heroSubline: "Cutting chai, monsoon laughs, 2am Maggi — sab kuch wrap karke, sirf tere liye.",
-  inviteKicker: "tere liye, sirf tere liye",
+  inviteKicker: "psst… aaj kisi ka birthday hai",
   inviteHeadlineA: "Today is",
   inviteHeadlineB: "all about you.",
   inviteSubline: "Andar ek chhoti si duniya wait kar rahi hai.",

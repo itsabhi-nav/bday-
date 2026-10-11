@@ -65,15 +65,6 @@ export default function Journey({ data, autoEnter = false, preview = false }: Pr
   return (
     <SiteProvider data={site} preview={preview}>
       <main className="relative min-h-screen bg-ivory text-cocoa">
-        {!entered && !preview && (
-          <button
-            onClick={handleEnter}
-            className="fixed left-4 top-4 z-[60] rounded-full border border-cocoa/20 bg-ivory/95 px-4 py-2 text-[11px] font-bold uppercase tracking-[0.18em] text-cocoasoft shadow-photo transition hover:text-cocoa"
-          >
-            Skip intro →
-          </button>
-        )}
-
         <AnimatePresence>{!entered && <InvitationIntro onEnter={handleEnter} />}</AnimatePresence>
 
         {entered && (
