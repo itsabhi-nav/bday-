@@ -4,17 +4,22 @@ import { getStore } from "@/lib/db";
 import { deleteCustomerUploads } from "@/lib/upload";
 import { requireSession } from "../../../_session";
 
-/** PATCH {password?, expiresAt?} → reset password / extend expiry (owner only). */
+/** PATCH {password?, expiresAt?, slug?} → reset password / extend expiry / relink page (owner only). */
 export async function PATCH(req: Request, { params }: { params: { username: string } }) {
   const s = await requireSession();
   if (!s.ok || s.role !== "owner") return NextResponse.json({ error: "Owner only" }, { status: 403 });
-  const body = (await req.json().catch(() => ({}))) as { password?: string; expiresAt?: string | null };
-  const patch: { passHash?: string; expiresAt?: string | null } = {};
+  const body = (await req.json().catch(() => ({}))) as { password?: string; expiresAt?: string | null; slug?: string };
+  const patch: { passHash?: string; expiresAt?: string | null; slug?: string } = {};
   if (body.password !== undefined) {
     if (body.password.length < 4) return NextResponse.json({ error: "Password must be 4+ characters" }, { status: 400 });
     patch.passHash = await hashPassword(body.password);
   }
   if (body.expiresAt !== undefined) patch.expiresAt = body.expiresAt || null;
+  if (body.slug !== undefined) {
+    const clean = body.slug.trim().toLowerCase().replace(/[^a-z0-9-]/g, "");
+    if (clean.length < 3) return NextResponse.json({ error: "Page URL too short — use 3+ letters" }, { status: 400 });
+    patch.slug = clean;
+  }
   try {
     await getStore().updateCustomer(params.username, patch);
     const site = await getStore().getSiteByUsername(params.username);
