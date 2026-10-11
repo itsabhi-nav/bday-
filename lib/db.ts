@@ -166,6 +166,9 @@ async function sb<T>(table: string, init: RequestInit & { query?: string } = {})
   const env = sbEnv();
   if (!env) throw new Error("Supabase not configured");
   const res = await fetch(`${env.url}/rest/v1/${table}${init.query ?? ""}`, {
+    // CRITICAL: never cache database reads. Next.js caches fetch GETs across
+    // requests — without this, customer edits would never show on live pages.
+    cache: "no-store",
     ...init,
     headers: {
       apikey: env.key,
