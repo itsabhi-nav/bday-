@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Plus, Trash2, Copy, LogOut, ExternalLink, KeyRound, CalendarClock } from "lucide-react";
+import { Plus, Trash2, Copy, LogOut, ExternalLink, KeyRound, CalendarClock, Send } from "lucide-react";
 import { slugify } from "@/lib/sitedata";
 
 interface Customer {
@@ -13,6 +13,22 @@ interface Customer {
   expiresAt: string | null;
 }
 
+interface CreatedCreds {
+  username: string;
+  password: string;
+  slug: string;
+  named: boolean;
+}
+
+/** True once the customer has set her name (i.e. her page link is meaningful). */
+function isNamed(c: { girlName: string }): boolean {
+  return !!c.girlName && c.girlName !== "Someone Special";
+}
+
+function loginText(origin: string, username: string, password: string): string {
+  return `Tumhara surprise studio ready hai ♥\nLogin: ${origin}/admin\nUsername: ${username}\nPassword: ${password}\nAndar her name set karke Save dabana — tab uska page link banega!`;
+}
+
 export default function OwnerDashboard() {
   const router = useRouter();
   const [customers, setCustomers] = useState<Customer[]>([]);
@@ -20,7 +36,7 @@ export default function OwnerDashboard() {
   const [error, setError] = useState("");
   const [form, setForm] = useState({ username: "", girlName: "", slug: "", password: "9872", expiresAt: "" });
   const [creating, setCreating] = useState(false);
-  const [createdLink, setCreatedLink] = useState("");
+  const [created, setCreated] = useState<CreatedCreds | null>(null);
   const [expiryEdits, setExpiryEdits] = useState<Record<string, string>>({});
   const [pwEdits, setPwEdits] = useState<Record<string, string>>({});
   const [busyUser, setBusyUser] = useState("");
@@ -49,7 +65,8 @@ export default function OwnerDashboard() {
     e.preventDefault();
     setCreating(true);
     setError("");
-    setCreatedLink("");
+    setCreated(null);
+    const password = form.password || "9872";
     try {
       const res = await fetch("/api/owner/customers", {
         method: "POST",
@@ -58,13 +75,18 @@ export default function OwnerDashboard() {
           username: form.username,
           girlName: form.girlName,
           slug: form.slug || undefined,
-          password: form.password || undefined,
+          password,
           expiresAt: form.expiresAt || null,
         }),
       });
       const json = await res.json();
       if (!res.ok) throw new Error(json.error || "Failed");
-      setCreatedLink(`${window.location.origin}/${json.slug}`);
+      setCreated({
+        username: form.username,
+        password,
+        slug: json.slug,
+        named: !!form.girlName.trim(),
+      });
       setForm({ username: "", girlName: "", slug: "", password: "9872", expiresAt: "" });
       await load();
     } catch (err) {
@@ -201,16 +223,37 @@ export default function OwnerDashboard() {
           <button type="submit" disabled={creating} className="shadow-scrap-sm mt-4 flex items-center gap-1.5 rounded-full bg-cherry px-6 py-2.5 text-xs font-bold uppercase tracking-[0.16em] text-ivory transition hover:bg-cherrydeep disabled:opacity-60">
             <Plus className="h-4 w-4" aria-hidden /> {creating ? "Creating…" : "Create + get link"}
           </button>
-          {createdLink && (
-            <p className="mt-3 flex flex-wrap items-center gap-2 bg-sage/40 px-4 py-2.5 text-sm font-bold" role="status">
-              <span className="break-all">{createdLink}</span>
-              <button type="button" onClick={() => void copy(createdLink)} className="flex items-center gap-1 rounded-full bg-cocoa px-3 py-1 text-[11px] uppercase tracking-wider text-ivory">
-                <Copy className="h-3 w-3" aria-hidden /> Copy
-              </button>
-              <a href={`https://wa.me/?text=${encodeURIComponent(`For you ♥ ${createdLink}`)}`} target="_blank" rel="noreferrer" className="rounded-full bg-[#25D366] px-3 py-1 text-[11px] uppercase tracking-wider text-white">
-                WhatsApp
-              </a>
-            </p>
+          {created && (
+            <div className="mt-4 border-2 border-dashed border-cherry/60 bg-butter/30 p-4" role="status">
+              <p className="text-xs font-bold uppercase tracking-[0.2em] text-cherry">
+                Bande ko YE bhejo (admin login — ladki wala link nahi!)
+              </p>
+              <p className="mt-2 whitespace-pre-line break-all font-mono text-[13px] font-bold">
+                {loginText(window.location.origin, created.username, created.password)}
+              </p>
+              <span className="mt-3 flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  onClick={() => void copy(loginText(window.location.origin, created.username, created.password))}
+                  className="flex items-center gap-1 rounded-full bg-cocoa px-4 py-1.5 text-[11px] font-bold uppercase tracking-wider text-ivory"
+                >
+                  <Copy className="h-3 w-3" aria-hidden /> Copy login
+                </button>
+                <a
+                  href={`https://wa.me/?text=${encodeURIComponent(loginText(window.location.origin, created.username, created.password))}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-center gap-1 rounded-full bg-[#25D366] px-4 py-1.5 text-[11px] font-bold uppercase tracking-wider text-white"
+                >
+                  <Send className="h-3 w-3" aria-hidden /> WhatsApp login
+                </a>
+              </span>
+              <p className="mt-2 text-xs font-medium text-cocoasoft">
+                {created.named
+                  ? `Girl page (after he saves): ${window.location.origin}/${created.slug}`
+                  : "Girl page link tab banega jab woh editor me naam set karke Save dabayega."}
+              </p>
+            </div>
           )}
         </form>
 
@@ -223,22 +266,46 @@ export default function OwnerDashboard() {
           )}
           {customers.map((c) => {
             const expired = c.expiresAt && new Date(c.expiresAt).getTime() < Date.now();
-            const link = typeof window !== "undefined" ? `${window.location.origin}/${c.slug}` : `/${c.slug}`;
+            const origin = typeof window !== "undefined" ? window.location.origin : "";
+            const named = isNamed(c);
+            const girlLink = `${origin}/${c.slug}`;
             return (
               <article key={c.username} className="border border-cocoa/15 bg-[#FFFDF7] p-5 shadow-photo">
                 <span className="flex flex-wrap items-center gap-2">
-                  <h3 className="font-display text-2xl font-semibold">{c.girlName}</h3>
+                  <h3 className="font-display text-2xl font-semibold">
+                    {named ? c.girlName : `@${c.username}`}
+                  </h3>
+                  {!named && (
+                    <span className="rounded-full bg-butter px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-widest">
+                      naam not set yet
+                    </span>
+                  )}
                   {expired && (
                     <span className="rounded-full bg-cherry px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-ivory">
                       Expired
                     </span>
                   )}
-                  <span className="ml-auto flex gap-2">
-                    <a href={`/${c.slug}`} target="_blank" rel="noreferrer" className="flex items-center gap-1 rounded-full bg-cream px-3 py-1.5 text-[11px] font-bold uppercase transition hover:bg-butter" title="Open page">
-                      <ExternalLink className="h-3.5 w-3.5" aria-hidden /> Page
-                    </a>
-                    <button onClick={() => void copy(link)} className="flex items-center gap-1 rounded-full bg-cream px-3 py-1.5 text-[11px] font-bold uppercase transition hover:bg-butter" title="Copy link">
-                      <Copy className="h-3.5 w-3.5" aria-hidden /> Link
+                  <span className="ml-auto flex flex-wrap gap-2">
+                    {named ? (
+                      <>
+                        <a href={`/${c.slug}`} target="_blank" rel="noreferrer" className="flex items-center gap-1 rounded-full bg-cream px-3 py-1.5 text-[11px] font-bold uppercase transition hover:bg-butter" title="Open her page">
+                          <ExternalLink className="h-3.5 w-3.5" aria-hidden /> Girl page
+                        </a>
+                        <button onClick={() => void copy(girlLink)} className="flex items-center gap-1 rounded-full bg-cream px-3 py-1.5 text-[11px] font-bold uppercase transition hover:bg-butter" title="Copy her page link">
+                          <Copy className="h-3.5 w-3.5" aria-hidden /> Girl link
+                        </button>
+                      </>
+                    ) : (
+                      <span className="rounded-full bg-cocoa/10 px-3 py-1.5 text-[11px] font-bold uppercase text-cocoasoft" title="Girl link tab banega jab woh naam set karega">
+                        Girl link: not set yet
+                      </span>
+                    )}
+                    <button
+                      onClick={() => void copy(`${origin}/admin (user: ${c.username})`)}
+                      className="flex items-center gap-1 rounded-full bg-sage/60 px-3 py-1.5 text-[11px] font-bold uppercase transition hover:bg-sage"
+                      title="Copy admin portal link + username (password wahi jo banate time diya tha)"
+                    >
+                      <KeyRound className="h-3.5 w-3.5" aria-hidden /> Admin login
                     </button>
                     <button onClick={() => void remove(c)} disabled={busyUser === c.username} className="flex items-center gap-1 rounded-full bg-cherry/10 px-3 py-1.5 text-[11px] font-bold uppercase text-cherry transition hover:bg-cherry hover:text-ivory disabled:opacity-50" title="Delete everything">
                       <Trash2 className="h-3.5 w-3.5" aria-hidden /> Delete
@@ -246,7 +313,10 @@ export default function OwnerDashboard() {
                   </span>
                 </span>
                 <p className="mt-1 break-all font-mono text-xs font-bold text-cocoasoft">
-                  login: {c.username} · page: /{c.slug} · since {new Date(c.createdAt).toLocaleDateString("en-IN")}
+                  user: {c.username} · page: {named ? `/${c.slug}` : "—"} · since {new Date(c.createdAt).toLocaleDateString("en-IN")}
+                </p>
+                <p className="mt-1 text-[11px] font-medium text-cocoasoft">
+                  Password: banate time wala{!named ? " (default 9872)" : ""} — bhool gaye to neeche Reset.
                 </p>
                 <span className="mt-3 grid gap-2 sm:grid-cols-2">
                   <label className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.12em]">

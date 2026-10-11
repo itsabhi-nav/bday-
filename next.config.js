@@ -12,6 +12,11 @@ const nextConfig = {
         protocol: "https",
         hostname: "thumb.wikimedia.org",
       },
+      {
+        // customer-uploaded photos live on Supabase storage
+        protocol: "https",
+        hostname: "*.supabase.co",
+      },
     ],
   },
 };

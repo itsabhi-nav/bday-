@@ -52,6 +52,10 @@ export async function PUT(req: Request) {
 
   try {
     if (newSlug !== site.slug) {
+      // check BEFORE touching uploads — a taken URL must not strand moved images
+      if (await store.getSite(newSlug)) {
+        return NextResponse.json({ error: "Page URL already taken" }, { status: 400 });
+      }
       await moveCustomerUploads(site.slug, newSlug);
       const moved = await store.moveSite(site.slug, newSlug);
       if (!moved) throw new Error("Could not move page");

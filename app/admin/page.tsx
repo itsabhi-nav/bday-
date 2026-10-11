@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Lock } from "lucide-react";
 
@@ -9,7 +9,22 @@ export default function AdminLogin() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
+  const [checking, setChecking] = useState(true);
   const router = useRouter();
+
+  // already logged in? skip the form, go straight in
+  useEffect(() => {
+    (async () => {
+      try {
+        const me = await fetch("/api/auth").then((r) => r.json());
+        if (me.session?.role === "owner") router.replace("/admin/owner");
+        else if (me.session) router.replace("/admin/site");
+        else setChecking(false);
+      } catch {
+        setChecking(false);
+      }
+    })();
+  }, [router]);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,6 +49,9 @@ export default function AdminLogin() {
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-cream px-6 text-cocoa">
+      {checking ? (
+        <p className="font-hand text-3xl">checking login…</p>
+      ) : (
       <form
         onSubmit={submit}
         className="relative w-full max-w-sm border border-cocoa/15 bg-[#FFFDF7] p-8 shadow-photo"
@@ -79,6 +97,7 @@ export default function AdminLogin() {
           Ordered a surprise? Login details are on your receipt.
         </p>
       </form>
+      )}
     </main>
   );
 }

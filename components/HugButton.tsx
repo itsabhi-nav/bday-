@@ -5,12 +5,15 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Heart } from "lucide-react";
 import Reveal, { ChapterLabel } from "./Reveal";
 import Burst from "./Burst";
+import { useSite } from "./SiteContext";
 import { usePrefersReducedMotion } from "@/hooks/useMedia";
 
-const KEY = "hugs-delivered";
+const KEY_PREFIX = "hugs-delivered:";
 
-/** Hug Delivery Service — press the heart, a hug flies to her. Counter persists. */
+/** Hug Delivery Service — press the heart, a hug flies to her. Counter persists per page. */
 export default function HugButton() {
+  const site = useSite();
+  const KEY = `${KEY_PREFIX}${site.slug}`;
   const [count, setCount] = useState(0);
   const [bursts, setBursts] = useState<number[]>([]);
   const [pops, setPops] = useState<number[]>([]);

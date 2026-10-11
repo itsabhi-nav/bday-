@@ -12,6 +12,7 @@ export default function ScratchCard({ children, label }: { children: React.React
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [revealed, setRevealed] = useState(false);
   const drawing = useRef(false);
+  const moves = useRef(0);
   const reduced = usePrefersReducedMotion();
 
   // paint the cover once sized
@@ -58,8 +59,7 @@ export default function ScratchCard({ children, label }: { children: React.React
     return () => window.removeEventListener("resize", paint);
   }, [label, revealed]);
 
-  const scratchAt = (clientX: number, clientY: number) => {
-    const canvas = canvasRef.current;
+  const scratchAt = (clientX: number, clientY: number) => {    const canvas = canvasRef.current;
     if (!canvas || revealed) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
@@ -120,7 +120,9 @@ export default function ScratchCard({ children, label }: { children: React.React
           onPointerMove={(e) => {
             if (!drawing.current) return;
             scratchAt(e.clientX, e.clientY);
-            measure();
+            // getImageData is expensive — sample every 6th move, always on release
+            moves.current += 1;
+            if (moves.current % 6 === 0) measure();
           }}
           onPointerUp={() => {
             drawing.current = false;
