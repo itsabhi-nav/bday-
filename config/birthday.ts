@@ -34,9 +34,9 @@ export const siteConfig = {
 };
 
 export const audioConfig = {
-  /** The bundled original music-box lullaby. Replace with your own MP3 if you like. */
-  src: "/audio/our-song.mp3",
-  title: "Our song — a music-box lullaby",
+  /** Bundled Happy Birthday (public-domain melody, music-box version). Replace with your own MP3 if you like. */
+  src: "/audio/happy-birthday.mp3",
+  title: "Happy Birthday — music-box version",
   volume: 0.7,
 };
 

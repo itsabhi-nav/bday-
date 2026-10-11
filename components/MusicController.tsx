@@ -23,11 +23,11 @@ export default function MusicController() {
     return (
       <div
         className="fixed bottom-4 right-4 z-40 flex items-center gap-2 rounded-full border border-cocoa/15 bg-ivory/95 px-4 py-2 text-xs text-cocoasoft shadow-photo backdrop-blur"
-        title="Place your song at /public/audio/our-song.mp3"
+        title="Place your song at /public/audio/happy-birthday.mp3"
         role="status"
       >
         <Music2 className="h-3.5 w-3.5" aria-hidden />
-        <span className="hidden sm:inline">Music unavailable — add our-song.mp3</span>
+        <span className="hidden sm:inline">Music unavailable — add happy-birthday.mp3</span>
         <span className="sm:hidden">Quiet mode</span>
       </div>
     );

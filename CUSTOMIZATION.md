@@ -38,14 +38,15 @@ If an image ever fails to load, the site shows a warm blush panel with the capti
 
 ## 3. Music — works out of the box
 
-`public/audio/our-song.mp3` contains a bundled **original music-box lullaby**
-(composed for this project, ~44s seamless loop, 128kbps). It starts inside the
-"Open your surprise" tap gesture, fades in, loops, and never restarts on scroll
+`public/audio/happy-birthday.mp3` contains a bundled **Happy Birthday music-box
+version** (public-domain 1893 melody — no copyright issue, use freely, ~52s loop).
+It starts inside the "Open your surprise" tap, fades in, loops, never restarts
 (single shared player in `lib/music.ts`).
 
-- To use your own song: overwrite `public/audio/our-song.mp3` with your file (keep the name), or change `audioConfig.src`.
+- To use your own song: overwrite `public/audio/happy-birthday.mp3` with your file (keep the name), or change `audioConfig.src`.
+
+- To use your own song: overwrite `public/audio/happy-birthday.mp3` with your file (keep the name), or change `audioConfig.src`.
 - The pill controller (bottom-right) shows the *real* player state: play/pause, mute, volume. If the file is missing it honestly says "Music unavailable" and the site works fine without it.
-- "Continue quietly, no music" opens the story without attempting playback.
 
 ## 4. Words
 
