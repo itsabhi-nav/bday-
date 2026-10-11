@@ -35,6 +35,9 @@ export async function POST(req: Request) {
   const girlName = (body.girlName || "").trim() || "Someone Special";
   const givenSlug = (body.slug || "").trim().toLowerCase().replace(/[^a-z0-9-]/g, "");
   const slug = givenSlug || ((body.girlName || "").trim() ? slugify(girlName) : username);
+  if (slug.length < 3) {
+    return NextResponse.json({ error: "Page URL too short — use 3+ letters (e.g. rinki-kumari)" }, { status: 400 });
+  }
   const password = body.password || DEFAULT_CUSTOMER_PASSWORD;
   if (password.length < 4) return NextResponse.json({ error: "Password must be 4+ characters" }, { status: 400 });
 

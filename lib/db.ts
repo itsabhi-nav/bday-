@@ -298,7 +298,17 @@ class SupabaseStore implements Store {
     if (await this.getSite(newSlug)) throw new Error("Page URL already taken");
     site.slug = newSlug;
     site.data.slug = newSlug;
-    await sb("sites", { method: "POST", body: JSON.stringify({ ...site, data: site.data }) });
+    await sb("sites", {
+      method: "POST",
+      body: JSON.stringify({
+        slug: site.slug,
+        username: site.username,
+        data: site.data,
+        created_at: site.createdAt,
+        expires_at: site.expiresAt,
+        updated_at: site.updatedAt,
+      }),
+    });
     await sb("sites", { method: "DELETE", query: `?slug=eq.${encodeURIComponent(oldSlug)}` });
     const c = await this.getCustomer(site.username);
     if (c) await this.updateCustomer(site.username, { slug: newSlug });

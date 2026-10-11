@@ -46,6 +46,9 @@ export async function PUT(req: Request) {
     // customer never set a URL → derive it from her name at save time
     newSlug = slugify(body.data.girlfriendName || "someone-special");
   }
+  if (newSlug.length < 3) {
+    return NextResponse.json({ error: "Page URL too short — use 3+ letters" }, { status: 400 });
+  }
 
   try {
     if (newSlug !== site.slug) {
