@@ -8,7 +8,6 @@ import HeroBirthday from "@/components/chapters/HeroBirthday";
 import WhatISee from "@/components/chapters/WhatISee";
 import StoryTimeline from "@/components/chapters/StoryTimeline";
 import MemoryGallery from "@/components/chapters/MemoryGallery";
-import Reasons from "@/components/chapters/Reasons";
 import LoveLetter from "@/components/chapters/LoveLetter";
 import Distance from "@/components/chapters/Distance";
 import HugButton from "@/components/HugButton";
@@ -124,14 +123,9 @@ export default function Journey({ data, autoEnter = false, preview = false }: Pr
                   <TornDivider from="#F7DCE2" to="#FFF9F0" />
                 </>
               )}
-              {s.reasons && (
-                <>
-                  <Reasons index={nx()} />
-                  <TornDivider from="#FFF9F0" to="#FDF1DE" />
-                </>
-              )}
               {s.letter && (
                 <>
+                  <TornDivider from="#FFF9F0" to="#FDF1DE" />
                   <LoveLetter index={nx()} />
                   <TornDivider from="#FDF1DE" to="#FFF9F0" />
                 </>

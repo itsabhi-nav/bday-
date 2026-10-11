@@ -122,24 +122,6 @@ export default function HeroBirthday({ index = "01" }: { index?: string }) {
                 {site.coverHero.caption}
               </figcaption>
             </motion.figure>
-            {/* overlapping mini print */}
-            <motion.figure
-              initial={{ opacity: 0, y: 24, rotate: -10 }}
-              whileInView={{ opacity: 1, y: 0, rotate: -7 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.45, duration: 0.8 }}
-              className="absolute -bottom-10 -left-4 w-28 bg-white p-1.5 pb-5 shadow-photo sm:-left-10 sm:w-36"
-            >
-              <SmartImage
-                src={site.coverNoteB.src}
-                alt={site.coverNoteB.alt}
-                className="aspect-square w-full"
-                sizes="200px"
-              />
-              <figcaption className="font-hand pt-1 text-center text-lg leading-none">
-                {site.coverNoteB.caption}
-              </figcaption>
-            </motion.figure>
           </Reveal>
         </div>
       </div>

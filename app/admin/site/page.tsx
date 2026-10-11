@@ -13,7 +13,6 @@ const STEPS = [
   { id: "couple", title: "Tum dono", hint: "Naam aur date" },
   { id: "photos", title: "Photos", hint: "Uski best photos" },
   { id: "story", title: "Yaadein", hint: "Tumhari kahani" },
-  { id: "notes", title: "Notes", hint: "Pyari baatein" },
   { id: "letter", title: "Letter", hint: "Dil ki baat" },
   { id: "parts", title: "Parts", hint: "Kya-kya dikhe" },
   { id: "gift", title: "Gift", hint: "Surprise + wish" },
@@ -26,7 +25,6 @@ const PART_LABELS: { key: keyof SiteData["sections"]; title: string; sub: string
   { key: "notice", title: "Things I notice", sub: "Uske baare me pyari lines" },
   { key: "timeline", title: "Story album", sub: "Date-wise yaadein" },
   { key: "gallery", title: "Photo board", sub: "Photos ki deewar" },
-  { key: "reasons", title: "Notes desk", sub: "Chhote love notes" },
   { key: "letter", title: "Love letter", sub: "Lamba khat" },
   { key: "distance", title: "Distance card", sub: "Door ho to bhi paas" },
   { key: "hug", title: "Hug button", sub: "Dabao, hug pahunchegi" },
@@ -356,7 +354,6 @@ export default function SiteEditor() {
             {step === "couple" && "Pehle batao, ye surprise kiske liye?"}
             {step === "photos" && "Uski best photos lagao"}
             {step === "story" && "Tumhari kahani likho"}
-            {step === "notes" && "Chhote pyare notes"}
             {step === "letter" && "Dil ki baat, khat me"}
             {step === "parts" && "Page pe kya-kya dikhe?"}
             {step === "gift" && "Gift + aakhri wish"}
@@ -564,44 +561,6 @@ export default function SiteEditor() {
                   >
                     <Plus className="h-4 w-4" aria-hidden /> Yaad add karo
                   </button>
-                </Q>
-              </>
-            )}
-
-            {step === "notes" && (
-              <>
-                <Q n="1" title="Chhote notes" sub="Ek-ek line. Ye notes ban ke bikhrenge.">
-                  {draft.reasons.map((r, i) => (
-                    <span key={i} className="flex items-start gap-2">
-                      <span className="font-hand mt-2.5 text-2xl text-cherry">{i + 1}.</span>
-                      <input
-                        className={inputCls}
-                        value={r}
-                        onChange={(e) => {
-                          const next = [...draft.reasons];
-                          next[i] = e.target.value;
-                          set("reasons", next);
-                        }}
-                        placeholder="e.g. Last bite hamesha mere liye"
-                      />
-                      <button type="button" onClick={() => set("reasons", draft.reasons.filter((_, j) => j !== i))} className="mt-3 text-cherry" aria-label={`Note ${i + 1} hatao`}>
-                        <Trash2 className="h-4 w-4" aria-hidden />
-                      </button>
-                    </span>
-                  ))}
-                  <button
-                    type="button"
-                    onClick={() => set("reasons", [...draft.reasons, ""])}
-                    className="flex items-center gap-1.5 rounded-full bg-cocoa px-5 py-2.5 text-xs font-bold uppercase tracking-[0.14em] text-ivory"
-                  >
-                    <Plus className="h-4 w-4" aria-hidden /> Note add karo
-                  </button>
-                </Q>
-                <Q n="2" title="Notes wali 2 mini photos" sub="Optional — khaali bhi chalega">
-                  <span className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                    <BigUpload slug={slug} title="Mini A" sub="" value={draft.coverNoteA.src} onChange={(url) => set("coverNoteA", { ...draft.coverNoteA, src: url })} />
-                    <BigUpload slug={slug} title="Mini B" sub="" value={draft.coverNoteB.src} onChange={(url) => set("coverNoteB", { ...draft.coverNoteB, src: url })} />
-                  </span>
                 </Q>
               </>
             )}

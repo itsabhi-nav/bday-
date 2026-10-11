@@ -4,7 +4,6 @@ import {
   timeline,
   memories,
   coverPhotos,
-  reasons,
   loveLetter,
   distanceSection,
   surpriseSection,
@@ -26,7 +25,6 @@ export interface Sections {
   notice: boolean;
   timeline: boolean;
   gallery: boolean;
-  reasons: boolean;
   letter: boolean;
   distance: boolean;
   hug: boolean;
@@ -56,9 +54,6 @@ export interface SiteData {
   memories: MemoryItem[];
   coverInvite: PhotoRef;
   coverHero: PhotoRef;
-  coverNoteA: PhotoRef;
-  coverNoteB: PhotoRef;
-  reasons: string[];
   loveLetter: typeof loveLetter;
   distanceSection: typeof distanceSection;
   surpriseSection: typeof surpriseSection;
@@ -70,7 +65,6 @@ export const DEFAULT_SECTIONS: Sections = {
   notice: true,
   timeline: true,
   gallery: true,
-  reasons: true,
   letter: true,
   distance: true,
   hug: true,
@@ -97,13 +91,11 @@ export function defaultSiteData(slug = "demo", girlName?: string): SiteData {
     easterEggHint: siteConfig.easterEggHint,
     sections: { ...DEFAULT_SECTIONS },
     whatISeeLines: [...whatISeeLines],
-    timeline: timeline.map((t) => ({ ...t })),
+    // demo me sirf 2 yaadein — baaki customer khud add karega
+    timeline: timeline.slice(0, 2).map((t) => ({ ...t })),
     memories: memories.map((m) => ({ ...m })),
     coverInvite: { ...coverPhotos.invite },
     coverHero: { ...coverPhotos.hero },
-    coverNoteA: { ...coverPhotos.noteA },
-    coverNoteB: { ...coverPhotos.noteB },
-    reasons: [...reasons],
     loveLetter: JSON.parse(JSON.stringify(loveLetter)),
     distanceSection: { ...distanceSection },
     surpriseSection: { ...surpriseSection },
