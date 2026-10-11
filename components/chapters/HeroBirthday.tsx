@@ -3,12 +3,12 @@
 import { motion } from "framer-motion";
 import { Cake, Gift, Heart } from "lucide-react";
 import SmartImage from "../SmartImage";
-import Reveal, { ChapterLabel } from "../Reveal";
+import Reveal from "../Reveal";
 import { FlowerDoodle, Marquee, StickerBadge, ScribbleUnderline, DoodleArrow } from "../Ornaments";
 import { useSite, usePreview } from "../SiteContext";
 
 /** Scene A — the birthday cover. Editorial, asymmetric, portrait-forward. */
-export default function HeroBirthday({ index = "01" }: { index?: string }) {
+export default function HeroBirthday() {
   const site = useSite();
   const preview = usePreview();
   return (
@@ -24,7 +24,6 @@ export default function HeroBirthday({ index = "01" }: { index?: string }) {
 
       <div className="mx-auto max-w-6xl px-6 pb-20 pt-12 sm:pt-16">
         <div className="flex items-start justify-between gap-4">
-          <ChapterLabel index={index} title="The birthday girl" />
           {/* date stamp */}
           <motion.div
             initial={{ opacity: 0, rotate: 12, scale: 0.8 }}

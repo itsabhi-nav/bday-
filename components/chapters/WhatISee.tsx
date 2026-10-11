@@ -1,15 +1,14 @@
 "use client";
 
-import Reveal, { ChapterLabel } from "../Reveal";
+import Reveal from "../Reveal";
 import { useSite } from "../SiteContext";
 
 /** Quiet interlude — "things I notice": big numerals, alternating rhythm. */
-export default function WhatISee({ index = "02" }: { index?: string }) {
+export default function WhatISee() {
   const site = useSite();
   return (
     <section id="see" aria-label="Things I notice about you" className="relative bg-cream px-6 py-20 sm:py-28">
       <div className="mx-auto max-w-4xl">
-        <ChapterLabel index={index} title="Things I notice" />
         <Reveal>
           <h2 className="font-display max-w-2xl text-4xl font-semibold leading-[1.02] sm:text-6xl">
             You, through <span className="italic text-cherry">my eyes</span>

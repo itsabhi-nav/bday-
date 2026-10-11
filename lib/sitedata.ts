@@ -7,7 +7,6 @@ import {
   loveLetter,
   distanceSection,
   finaleSection,
-  easterEgg,
   type TimelineItem,
   type MemoryItem,
 } from "@/config/birthday";
@@ -53,9 +52,9 @@ export interface SiteData {
   coverInvite: PhotoRef;
   coverHero: PhotoRef;
   loveLetter: typeof loveLetter;
-  distanceSection: typeof distanceSection;
+  // free dedication block — koi bhi photo + kuch bhi text (distance-specific nahi)
+  distanceSection: typeof distanceSection & { image?: string; imageAlt?: string; caption?: string };
   finaleSection: typeof finaleSection;
-  easterEgg: typeof easterEgg;
 }
 
 export const DEFAULT_SECTIONS: Sections = {
@@ -87,15 +86,14 @@ export function defaultSiteData(slug = "demo", girlName?: string): SiteData {
     easterEggHint: siteConfig.easterEggHint,
     sections: { ...DEFAULT_SECTIONS },
     whatISeeLines: [...whatISeeLines],
-    // demo me sirf 2 yaadein — baaki customer khud add karega
+    // demo me sirf 2 yaadein + 4 photos — baaki customer khud add karega
     timeline: timeline.slice(0, 2).map((t) => ({ ...t })),
-    memories: memories.map((m) => ({ ...m })),
+    memories: memories.slice(0, 4).map((m) => ({ ...m })),
     coverInvite: { ...coverPhotos.invite },
     coverHero: { ...coverPhotos.hero },
     loveLetter: JSON.parse(JSON.stringify(loveLetter)),
     distanceSection: { ...distanceSection },
     finaleSection: { ...finaleSection },
-    easterEgg: { ...easterEgg },
   };
 }
 

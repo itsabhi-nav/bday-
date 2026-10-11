@@ -26,11 +26,9 @@ interface Props {
   preview?: boolean;
 }
 
-const pad = (n: number) => (n < 10 ? `0${n}` : `${n}`);
-
 /**
  * Orchestrator: invitation gate -> page-by-page birthday story.
- * Chapters render only if enabled in data.sections, numbered in order —
+ * Chapters render only if enabled in data.sections —
  * so every customer's page has its own shape.
  */
 export default function Journey({ data, autoEnter = false, preview = false }: Props) {
@@ -62,8 +60,6 @@ export default function Journey({ data, autoEnter = false, preview = false }: Pr
     };
   }, [entered, preview]);
 
-  let n = 0;
-  const nx = () => pad(++n);
   const s = site.sections;
 
   return (
@@ -96,23 +92,23 @@ export default function Journey({ data, autoEnter = false, preview = false }: Pr
             )}
 
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.9 }}>
-              <HeroBirthday index={nx()} />
+              <HeroBirthday />
               <TornDivider from="#FFF9F0" to="#FDF1DE" />
               {s.notice && (
                 <>
-                  <WhatISee index={nx()} />
+                  <WhatISee />
                   <TornDivider from="#FDF1DE" to="#FFF9F0" />
                 </>
               )}
               {s.timeline && (
                 <>
-                  <StoryTimeline index={nx()} />
+                  <StoryTimeline />
                   <TornDivider from="#FFF9F0" to="#F7DCE2" />
                 </>
               )}
               {s.gallery && (
                 <>
-                  <MemoryGallery index={nx()} />
+                  <MemoryGallery />
                   <div className="bg-blush pb-10">
                     <Marquee
                       items={["still not over", `we love ${site.girlfriendName}`, "keep going", "best part next"]}
@@ -125,13 +121,13 @@ export default function Journey({ data, autoEnter = false, preview = false }: Pr
               {s.letter && (
                 <>
                   <TornDivider from="#FFF9F0" to="#FDF1DE" />
-                  <LoveLetter index={nx()} />
+                  <LoveLetter />
                   <TornDivider from="#FDF1DE" to="#FFF9F0" />
                 </>
               )}
               {s.distance && (
                 <>
-                  <Distance index={nx()} />
+                  <Distance />
                   <TornDivider from="#FFF9F0" to={s.hug ? "#FDF1DE" : s.cake ? "#3A2422" : "#FFF9F0"} />
                 </>
               )}
@@ -150,7 +146,7 @@ export default function Journey({ data, autoEnter = false, preview = false }: Pr
                       className="bg-cherry text-ivory"
                     />
                   </div>
-                  <CakeFinale index={nx()} />
+                  <CakeFinale />
                   <TornDivider from="#E0A05B" to="#FFF9F0" />
                 </>
               )}

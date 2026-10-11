@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Wind, RotateCcw } from "lucide-react";
-import Reveal, { ChapterLabel } from "../Reveal";
+import Reveal from "../Reveal";
 import Burst from "../Burst";
 import { FlowerDoodle } from "../Ornaments";
 import { useSite } from "../SiteContext";
@@ -13,7 +13,7 @@ const CANDLE_COUNT = 5;
 const CANDLE_COLORS = ["#C83D4D", "#DCA7AF", "#7A8B6F", "#E0A93E", "#A02C3C"];
 
 /** Scene G — the finale. A warm evening garden party, not a galaxy. */
-export default function CakeFinale({ index = "09" }: { index?: string }) {
+export default function CakeFinale() {
   const site = useSite();
   const finaleSection = site.finaleSection;
   const [lit, setLit] = useState<boolean[]>(Array(CANDLE_COUNT).fill(true));
@@ -152,7 +152,6 @@ export default function CakeFinale({ index = "09" }: { index?: string }) {
       <FlowerDoodle petal="#F4D98B" className="absolute right-6 top-40 h-10 w-10 rotate-12 opacity-80" />
 
       <div className="relative mx-auto max-w-2xl pt-10 text-center">
-        <ChapterLabel index={index} title="Make a wish" align="center" tone="light" />
         <Reveal>
           <h2 className="font-display text-4xl font-semibold text-ivory sm:text-6xl">{finaleSection.heading}</h2>
           <p className="mt-3 text-sm font-semibold text-ivory/80">

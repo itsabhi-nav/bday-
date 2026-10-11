@@ -2,19 +2,18 @@
 
 import { motion } from "framer-motion";
 import SmartImage from "../SmartImage";
-import Reveal, { ChapterLabel } from "../Reveal";
+import Reveal from "../Reveal";
 import { useSite } from "../SiteContext";
 
 /**
  * Scene C — the album. Journal entries taped to the page, joined by a
  * dashed twine spine. Alternating sides on desktop, single column on mobile.
  */
-export default function StoryTimeline({ index = "03" }: { index?: string }) {
+export default function StoryTimeline() {
   const site = useSite();
   return (
     <section aria-label="Our story" className="relative bg-ivory px-6 py-20 sm:py-28">
       <div className="mx-auto max-w-5xl">
-        <ChapterLabel index={index} title="Our story, so far" />
         <div className="flex flex-wrap items-end justify-between gap-4">
           <Reveal>
             <h2 className="font-display max-w-xl text-4xl font-semibold leading-[1.02] sm:text-6xl">

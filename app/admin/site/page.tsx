@@ -26,7 +26,7 @@ const PART_LABELS: { key: keyof SiteData["sections"]; title: string; sub: string
   { key: "timeline", title: "Story album", sub: "Date-wise yaadein" },
   { key: "gallery", title: "Photo board", sub: "Photos ki deewar" },
   { key: "letter", title: "Love letter", sub: "Lamba khat" },
-  { key: "distance", title: "Distance card", sub: "Door ho to bhi paas" },
+  { key: "distance", title: "Free page", sub: "Photo + kuch bhi text" },
   { key: "hug", title: "Hug button", sub: "Dabao, hug pahunchegi" },
   { key: "cake", title: "Cake + candles", sub: "Blow the candles" },
 ];
@@ -609,13 +609,32 @@ export default function SiteEditor() {
                     />
                   </span>
                 </Q>
-                <Q n="3" title="Door ho to ye line" sub="Distance card ka message">
+                <Q n="3" title="Free page — kuch bhi" sub="Heading + message + chaaho to photo. Distance zaroori nahi.">
+                  <input
+                    className={inputCls}
+                    value={draft.distanceSection.heading}
+                    onChange={(e) => set("distanceSection", { ...draft.distanceSection, heading: e.target.value })}
+                    placeholder="Heading — e.g. Ek baat dil se"
+                  />
                   <textarea
                     className={inputCls}
                     rows={2}
                     value={draft.distanceSection.body}
                     onChange={(e) => set("distanceSection", { ...draft.distanceSection, body: e.target.value })}
                     placeholder="e.g. Kaash aaj saath hote…"
+                  />
+                  <BigUpload
+                    slug={slug}
+                    title=""
+                    sub="Photo optional hai"
+                    value={draft.distanceSection.image}
+                    onChange={(url) => set("distanceSection", { ...draft.distanceSection, image: url })}
+                  />
+                  <input
+                    className={inputCls}
+                    value={draft.distanceSection.caption || ""}
+                    onChange={(e) => set("distanceSection", { ...draft.distanceSection, caption: e.target.value })}
+                    placeholder="Photo caption (optional)"
                   />
                 </Q>
               </>
@@ -659,15 +678,6 @@ export default function SiteEditor() {
                     value={draft.finaleSection.finalLine}
                     onChange={(e) => set("finaleSection", { ...draft.finaleSection, finalLine: e.target.value })}
                     placeholder="Aakhri line — e.g. Happy Birthday…"
-                  />
-                </Q>
-                <Q n="2" title="Secret note" sub="Chhupa hua phool dabane pe milega" optional>
-                  <textarea
-                    className={inputCls}
-                    rows={2}
-                    value={draft.easterEgg.secretBody}
-                    onChange={(e) => set("easterEgg", { ...draft.easterEgg, secretBody: e.target.value })}
-                    placeholder="Sirf uske liye secret…"
                   />
                 </Q>
               </>

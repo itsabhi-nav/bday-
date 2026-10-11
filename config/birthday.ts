@@ -42,10 +42,7 @@ export const audioConfig = {
 
 export const whatISeeLines: string[] = [
   "You smile mid-sentence. The laugh always arrives early.",
-  "You fight auto drivers like a lawyer. The meter always surrenders.",
   "You save the last bite for me. Every. Single. Time.",
-  "You look after everyone before yourself. Dadi, didi, billi — all.",
-  "Ordinary Tuesdays with you. My favourite version of us.",
 ];
 
 export interface TimelineItem {

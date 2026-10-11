@@ -26,30 +26,3 @@ export default function Reveal({ children, delay = 0, y = 28, className = "", on
     </motion.div>
   );
 }
-
-/** Small editorial chapter marker: "No. 02 — Title". Aligns left by default. */
-export function ChapterLabel({
-  index,
-  title,
-  align = "left",
-  tone = "dark",
-}: {
-  index: string;
-  title: string;
-  align?: "left" | "center";
-  tone?: "dark" | "light";
-}) {
-  const line = tone === "dark" ? "bg-cocoa/30" : "bg-ivory/40";
-  const text = tone === "dark" ? "text-cherry" : "text-butter";
-  return (
-    <Reveal
-      className={`mb-5 flex items-center gap-3 ${align === "center" ? "justify-center" : "justify-start"}`}
-    >
-      <span className={`h-px w-8 ${line}`} aria-hidden />
-      <span className={`text-[11px] font-bold uppercase tracking-[0.3em] ${text}`}>
-        No. {index} — {title}
-      </span>
-      {align === "center" && <span className={`h-px w-8 ${line}`} aria-hidden />}
-    </Reveal>
-  );
-}

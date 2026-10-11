@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Heart } from "lucide-react";
-import Reveal, { ChapterLabel } from "./Reveal";
+import Reveal from "./Reveal";
 import Burst from "./Burst";
 import { useSite } from "./SiteContext";
 import { usePrefersReducedMotion } from "@/hooks/useMedia";
@@ -49,7 +49,6 @@ export default function HugButton() {
   return (
     <section aria-label="Hug delivery service" className="relative overflow-hidden bg-cream px-6 py-20 text-center sm:py-24">
       <div className="relative mx-auto max-w-xl">
-        <ChapterLabel index="7½" title="Hug break" align="center" />
         <Reveal>
           <h2 className="font-display text-4xl font-semibold sm:text-5xl">
             Hug <span className="marker italic">delivery</span>

@@ -1,62 +1,45 @@
 "use client";
 
-import { useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
-import Reveal, { ChapterLabel } from "../Reveal";
+import Reveal from "../Reveal";
+import SmartImage from "../SmartImage";
 import { useSite } from "../SiteContext";
 
-/** Warm postcard interlude — two stamped cards joined by twine that draws on scroll. */
-export default function Distance({ index = "07" }: { index?: string }) {
+/** A free dedication block — koi bhi photo, kuch bhi text. Customer jaisa chahe bhare. */
+export default function Distance() {
   const site = useSite();
-  const distanceSection = site.distanceSection;
-  const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
-  const draw = useTransform(scrollYProgress, [0.25, 0.75], [0, 1]);
+  const d = site.distanceSection;
 
   return (
-    <section aria-label="If you were here right now" className="relative bg-ivory px-6 py-20 sm:py-28">
-      <div ref={ref} className="mx-auto max-w-4xl text-center">
-        <ChapterLabel index={index} title="Across the miles" align="center" />
+    <section aria-label={d.heading} className="relative bg-ivory px-6 py-20 sm:py-28">
+      <div className="mx-auto max-w-2xl text-center">
         <Reveal>
-          <h2 className="font-display mx-auto max-w-xl text-4xl font-semibold leading-tight sm:text-5xl">
-            {distanceSection.heading}
+          <h2 className="font-display text-4xl font-semibold leading-tight sm:text-5xl">
+            {d.heading}
           </h2>
         </Reveal>
 
-        <div className="relative mx-auto mt-10 max-w-2xl" aria-hidden>
-          <svg viewBox="0 0 600 120" className="h-28 w-full sm:h-32" fill="none">
-            <motion.path
-              d="M70 90 C 200 10, 400 10, 530 90"
-              stroke="#C83D4D"
-              strokeWidth="2.5"
-              strokeDasharray="8 7"
-              strokeLinecap="round"
-              style={{ pathLength: draw }}
-            />
-          </svg>
-          <div className="flex items-start justify-between px-2 sm:px-8">
-            <div className="w-32 -rotate-3 border border-cocoa/15 bg-[#FFFDF7] p-2 pb-6 shadow-photo sm:w-40">
-              <div className="flex h-16 items-center justify-center bg-blush sm:h-20">
-                <span className="font-hand text-2xl text-cherry">you</span>
-              </div>
-              <p className="mt-1 text-center text-[10px] font-bold uppercase tracking-[0.2em] text-cocoasoft">
-                {distanceSection.fromLabel}
-              </p>
-            </div>
-            <div className="w-32 rotate-3 border border-cocoa/15 bg-[#FFFDF7] p-2 pb-6 shadow-photo sm:w-40">
-              <div className="flex h-16 items-center justify-center bg-sage/60 sm:h-20">
-                <span className="font-hand text-2xl text-cocoa">me</span>
-              </div>
-              <p className="mt-1 text-center text-[10px] font-bold uppercase tracking-[0.2em] text-cocoasoft">
-                {distanceSection.toLabel}
-              </p>
-            </div>
-          </div>
-        </div>
+        {d.image && (
+          <Reveal delay={0.1} className="relative mx-auto mt-10 w-full max-w-sm">
+            <figure className="relative -rotate-1 bg-white p-3 pb-12 shadow-photo">
+              <span className="tape -top-3 left-1/2 -translate-x-1/2 -rotate-3" aria-hidden />
+              <SmartImage
+                src={d.image}
+                alt={d.imageAlt || d.heading}
+                className="aspect-[4/5] w-full"
+                sizes="(max-width: 768px) 90vw, 400px"
+              />
+              {d.caption && (
+                <figcaption className="font-hand absolute inset-x-0 bottom-2.5 text-center text-2xl leading-none text-cocoa">
+                  {d.caption}
+                </figcaption>
+              )}
+            </figure>
+          </Reveal>
+        )}
 
-        <Reveal delay={0.1}>
-          <p className="font-display mx-auto mt-10 max-w-xl text-xl italic leading-relaxed sm:text-2xl">
-            “{distanceSection.body}”
+        <Reveal delay={0.15}>
+          <p className="font-display mx-auto mt-8 max-w-xl text-xl italic leading-relaxed sm:text-2xl">
+            “{d.body}”
           </p>
         </Reveal>
       </div>

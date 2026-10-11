@@ -4,14 +4,14 @@ import { useCallback, useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
 import SmartImage from "../SmartImage";
-import Reveal, { ChapterLabel } from "../Reveal";
+import Reveal from "../Reveal";
 import { useSite } from "../SiteContext";
 
 /**
  * Scene D — the photo drawer. A masonry-style collage of mixed sizes and
  * small rotations, like prints spread on a table. Tap to open the lightbox.
  */
-export default function MemoryGallery({ index = "04" }: { index?: string }) {
+export default function MemoryGallery() {
   const site = useSite();
   const memories = site.memories;
   const [lightbox, setLightbox] = useState<number | null>(null);
@@ -42,7 +42,6 @@ export default function MemoryGallery({ index = "04" }: { index?: string }) {
       <div className="mx-auto max-w-6xl">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
-            <ChapterLabel index={index} title="Small moments, big meaning" />
             <Reveal>
               <h2 className="font-display max-w-xl text-4xl font-semibold leading-[1.02] sm:text-6xl">
                 Pinned to <span className="italic text-cherry">the board</span>
@@ -56,7 +55,7 @@ export default function MemoryGallery({ index = "04" }: { index?: string }) {
           </Reveal>
         </div>
 
-        <div className="mt-12 columns-2 gap-5 sm:columns-3 [&>*]:mb-5" role="list" aria-label="Memory photos">
+        <div className="mt-12 grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-6" role="list" aria-label="Memory photos">
           {memories.map((m, i) => (
             <motion.button
               key={i}
@@ -68,7 +67,7 @@ export default function MemoryGallery({ index = "04" }: { index?: string }) {
               transition={{ duration: 0.6, delay: (i % 3) * 0.08 }}
               whileHover={{ rotate: 0, scale: 1.02 }}
               aria-label={`Open photo: ${m.caption}`}
-              className={`block w-full break-inside-avoid bg-white p-2 pb-3 text-left shadow-photo transition-shadow hover:shadow-scrap ${tilts[i % tilts.length]}`}
+              className={`block w-full bg-white p-2 pb-3 text-left shadow-photo transition-shadow hover:shadow-scrap ${tilts[i % tilts.length]}`}
             >
               <SmartImage
                 src={m.src}
@@ -77,18 +76,10 @@ export default function MemoryGallery({ index = "04" }: { index?: string }) {
                 className={`w-full ${m.tall ? "aspect-[3/4]" : "aspect-square"}`}
                 sizes="(max-width: 768px) 45vw, 380px"
               />
-              <span className="block px-1 pt-2 text-[13px] font-semibold leading-snug">{m.caption}</span>
-              {m.handwritten && (
-                <span className="font-hand block px-1 text-xl leading-tight text-cherry">{m.handwritten}</span>
-              )}
+              <span className="block truncate px-1 pt-2 text-[13px] font-semibold leading-snug">{m.caption}</span>
             </motion.button>
           ))}
         </div>
-        <Reveal>
-          <p className="mt-6 text-xs font-semibold uppercase tracking-[0.2em] text-cocoasoft">
-            Temporary photos — swap in your own via <span className="text-cherry">config/birthday.ts</span>
-          </p>
-        </Reveal>
       </div>
 
       {/* lightbox */}
