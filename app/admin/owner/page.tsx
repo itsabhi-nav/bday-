@@ -170,21 +170,24 @@ export default function OwnerDashboard() {
         <form onSubmit={create} className="relative mt-6 border border-cocoa/15 bg-[#FFFDF7] p-6 shadow-photo">
           <span className="tape -top-3 left-8 -rotate-6" aria-hidden />
           <h2 className="font-display text-2xl font-semibold">New customer</h2>
+          <p className="mt-1 text-[13px] font-medium text-cocoasoft">
+            Sirf <b>username + password</b> do — baaki (ladki ka naam, page URL) woh khud apne editor me set karega. Tabhi uska URL banega.
+          </p>
           <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
             <label className="text-xs font-bold uppercase tracking-[0.14em]">
               Username (login)
               <input required value={form.username} onChange={(e) => setForm({ ...form, username: e.target.value.toLowerCase().replace(/[^a-z0-9-_]/g, "") })} placeholder="aarav" className="mt-1 w-full rounded-md border-2 border-cocoa/25 bg-ivory px-3 py-2 text-sm normal-case tracking-normal" />
             </label>
             <label className="text-xs font-bold uppercase tracking-[0.14em]">
-              Girl name
-              <input required value={form.girlName} onChange={(e) => {
+              Girl name (optional)
+              <input value={form.girlName} onChange={(e) => {
                 const g = e.target.value;
                 setForm((f) => ({ ...f, girlName: g, slug: f.slug || slugify(g) }));
               }} placeholder="Rinki Kumari" className="mt-1 w-full rounded-md border-2 border-cocoa/25 bg-ivory px-3 py-2 text-sm normal-case tracking-normal" />
             </label>
             <label className="text-xs font-bold uppercase tracking-[0.14em]">
-              Page URL
-              <input value={form.slug} onChange={(e) => setForm({ ...form, slug: e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, "") })} placeholder="rinki-kumari" className="mt-1 w-full rounded-md border-2 border-cocoa/25 bg-ivory px-3 py-2 text-sm normal-case tracking-normal" />
+              Page URL (optional)
+              <input value={form.slug} onChange={(e) => setForm({ ...form, slug: e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, "") })} placeholder="auto: username" className="mt-1 w-full rounded-md border-2 border-cocoa/25 bg-ivory px-3 py-2 text-sm normal-case tracking-normal" />
             </label>
             <label className="text-xs font-bold uppercase tracking-[0.14em]">
               Password (default 9872)

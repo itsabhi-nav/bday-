@@ -40,8 +40,12 @@ export async function PUT(req: Request) {
   const site = await store.getSiteByUsername(target);
   if (!site) return NextResponse.json({ error: "Page not found" }, { status: 404 });
 
-  const newSlug = (body.slug || site.slug).trim().toLowerCase().replace(/[^a-z0-9-]/g, "");
-  if (!newSlug) return NextResponse.json({ error: "Invalid page URL" }, { status: 400 });
+  const { slugify } = await import("@/lib/sitedata");
+  let newSlug = (body.slug || "").trim().toLowerCase().replace(/[^a-z0-9-]/g, "");
+  if (!newSlug) {
+    // customer never set a URL → derive it from her name at save time
+    newSlug = slugify(body.data.girlfriendName || "someone-special");
+  }
 
   try {
     if (newSlug !== site.slug) {

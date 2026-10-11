@@ -29,8 +29,12 @@ export async function POST(req: Request) {
   };
   const username = (body.username || "").trim().toLowerCase().replace(/[^a-z0-9-_]/g, "");
   if (!username) return NextResponse.json({ error: "Username required (letters, numbers, - _)" }, { status: 400 });
+  // Girl name + page URL are OPTIONAL here — the customer sets them himself
+  // in his editor (that's when /her-name URL forms). Default slug = username
+  // so multiple blank customers never collide.
   const girlName = (body.girlName || "").trim() || "Someone Special";
-  const slug = (body.slug || "").trim() || slugify(girlName) || username;
+  const givenSlug = (body.slug || "").trim().toLowerCase().replace(/[^a-z0-9-]/g, "");
+  const slug = givenSlug || ((body.girlName || "").trim() ? slugify(girlName) : username);
   const password = body.password || DEFAULT_CUSTOMER_PASSWORD;
   if (password.length < 4) return NextResponse.json({ error: "Password must be 4+ characters" }, { status: 400 });
 

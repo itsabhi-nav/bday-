@@ -31,17 +31,23 @@ Isliye auto keep-alive pehle se laga diya hai:
 
 ## 2. Order aaye to kya karna hai (2 min)
 
+**Tum sirf login dete ho — naam/URL woh khud set karta hai:**
+
 1. Boss room (`/admin/owner`) → **New customer**:
-   - Username: `aarav` (customer ka login id)
-   - Girl name: `Rinki Kumari` (page URL auto: `rinki-kumari`)
+   - Username: `aarav` (us bande ka login id — bas yehi required hai)
    - Password: default **9872** already bhara hai — chaaho to custom do
+   - Girl name + Page URL: **khali chhodo** (woh khud apne editor me bharega)
    - Valid till: optional (khali = kabhi expire nahi)
-2. **Create + get link** dabao → page link copy karo.
-3. Customer ko WhatsApp pe bhejo: **page link + username + password (9872)**.
-4. Customer `/admin` me login karke apni photos, naam, stories, letter sab
-   edit karta hai — **right side live preview** me same-to-same dikhta hai.
-5. **Save** dabate hi `tumharidomain.com/rinki-kumari` live. Wahi link woh
-   ladki ko bhejta hai (editor me Copy + WhatsApp buttons bane hain).
+2. Bande ko WhatsApp pe bhejo: **portal link + username + password**:
+   ```
+   Tumhara surprise studio ready hai ♥
+   Link: tumharidomain.com/admin
+   Username: aarav | Password: 9872
+   ```
+3. Woh login karke **Her name** likhta hai (e.g. Rinki Kumari) → **Auto** dabata hai
+   → **Save** → uska page link ban jata hai: `tumharidomain.com/rinki-kumari`
+4. Wahi link woh ladki ko bhejta hai (editor me Copy + WhatsApp buttons bane hain).
+   **Ladki ko kabhi admin nahi dikhta — sirf uska surprise page.**
 
 ## 3. Expiry, password, delete
 

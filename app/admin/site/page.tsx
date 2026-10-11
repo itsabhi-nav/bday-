@@ -307,6 +307,9 @@ export default function SiteEditor() {
                       Auto
                     </button>
                   </span>
+                  <p className="mt-1 text-[11px] font-medium text-cocoasoft">
+                    Uski naam se Auto dabao → Save → yehi uska link ban jayega. Share tab se bhejo.
+                  </p>
                 </Field>
                 <div className="grid grid-cols-2 gap-4">
                   <Field label="Nickname">
