@@ -9,7 +9,11 @@ import { requireSession } from "../../_session";
 export async function GET() {
   const s = await requireSession();
   if (!s.ok || s.role !== "owner") return NextResponse.json({ error: "Owner only" }, { status: 403 });
-  return NextResponse.json({ customers: await getStore().listCustomers() });
+  const customers = await getStore().listCustomers();
+  // never send password hashes to the browser — owner doesn't need them
+  return NextResponse.json({
+    customers: customers.map(({ passHash: _omit, ...c }) => c),
+  });
 }
 
 /** POST {username, password?, girlName?, slug?, expiresAt?} → create customer + page. */
