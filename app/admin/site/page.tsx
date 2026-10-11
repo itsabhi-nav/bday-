@@ -113,6 +113,7 @@ function PhotoUpload({ slug, value, onChange, label }: { slug: string; value?: s
 export default function SiteEditor() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
+  const [gate, setGate] = useState<"checking" | "ok">("checking");
   const [tab, setTab] = useState<Tab>("Profile");
   const [draft, setDraft] = useState<SiteData>(() => defaultSiteData());
   const [slug, setSlug] = useState("demo");
@@ -133,7 +134,13 @@ export default function SiteEditor() {
     (async () => {
       const me = await fetch("/api/auth").then((r) => r.json());
       if (!me.session) {
+        // not logged in at all → must login first (username + password)
         router.replace("/admin");
+        return;
+      }
+      if (me.session.role === "owner") {
+        // owner has no editable page → boss room is their home
+        router.replace("/admin/owner");
         return;
       }
       const res = await fetch("/api/site");
@@ -146,6 +153,7 @@ export default function SiteEditor() {
       setDraft(site.data);
       setSlug(site.slug);
       setExpiresAt(site.expiresAt);
+      setGate("ok");
       setLoading(false);
     })();
   }, [router]);
@@ -204,10 +212,15 @@ export default function SiteEditor() {
     }
   };
 
-  if (loading) {
+  if (loading || gate !== "ok") {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-cream text-cocoa">
-        <p className="font-hand text-3xl">opening your studio…</p>
+      <main className="flex min-h-screen flex-col items-center justify-center gap-3 bg-cream px-6 text-center text-cocoa">
+        <p className="font-hand text-3xl">
+          {gate === "ok" ? "opening your studio…" : "login check ho raha hai…"}
+        </p>
+        <a href="/admin" className="text-xs font-bold uppercase tracking-[0.2em] text-cherry underline">
+          Login page kholo
+        </a>
       </main>
     );
   }
@@ -630,7 +643,7 @@ export default function SiteEditor() {
           </span>
           <div className="mt-4 flex justify-center">
             <div
-              className={`overflow-y-auto rounded-xl border-2 border-cocoa/30 bg-ivory shadow-photo ${
+              className={`overflow-y-auto overflow-x-hidden rounded-xl border-2 border-cocoa/30 bg-ivory shadow-photo ${
                 previewWidth === "phone" ? "h-[78vh] w-full max-w-[390px]" : "h-[78vh] w-full"
               }`}
             >

@@ -5,11 +5,12 @@ import { Cake, Gift, Heart } from "lucide-react";
 import SmartImage from "../SmartImage";
 import Reveal, { ChapterLabel } from "../Reveal";
 import { FlowerDoodle, Marquee, StickerBadge, ScribbleUnderline, DoodleArrow } from "../Ornaments";
-import { useSite } from "../SiteContext";
+import { useSite, usePreview } from "../SiteContext";
 
 /** Scene A — the birthday cover. Editorial, asymmetric, portrait-forward. */
 export default function HeroBirthday({ index = "01" }: { index?: string }) {
   const site = useSite();
+  const preview = usePreview();
   return (
     <section aria-label="Happy birthday" className="relative overflow-hidden">
       {/* ribbon on top */}
@@ -42,7 +43,11 @@ export default function HeroBirthday({ index = "01" }: { index?: string }) {
           {/* headline */}
           <div>
             <Reveal>
-              <h2 className="font-display text-[15vw] font-semibold leading-[0.92] tracking-tight sm:text-7xl lg:text-[5.2rem]">
+              <h2
+                className={`font-display font-semibold leading-[0.92] tracking-tight ${
+                  preview ? "text-5xl" : "text-[15vw] sm:text-7xl lg:text-[5.2rem]"
+                }`}
+              >
                 {site.heroHeadline},
                 <br />
                 <span className="marker italic">{site.girlfriendName}</span>

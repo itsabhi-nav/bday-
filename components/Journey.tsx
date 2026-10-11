@@ -69,7 +69,7 @@ export default function Journey({ data, autoEnter = false, preview = false }: Pr
   const s = site.sections;
 
   return (
-    <SiteProvider data={site}>
+    <SiteProvider data={site} preview={preview}>
       <main className="relative min-h-screen bg-ivory text-cocoa">
         {!entered && !preview && (
           <button
