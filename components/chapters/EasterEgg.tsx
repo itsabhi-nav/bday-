@@ -4,10 +4,12 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Reveal from "../Reveal";
 import { FlowerDoodle } from "../Ornaments";
-import { easterEgg, siteConfig } from "@/config/birthday";
+import { useSite } from "../SiteContext";
 
 /** The pressed flower + colophon footer. */
 export default function EasterEgg() {
+  const site = useSite();
+  const easterEgg = site.easterEgg;
   const [taps, setTaps] = useState(0);
   const [unlocked, setUnlocked] = useState(false);
   const [footerTaps, setFooterTaps] = useState(0);
@@ -30,7 +32,7 @@ export default function EasterEgg() {
       <section aria-label="A tiny secret" className="bg-ivory px-6 py-20 text-center">
         <Reveal>
           <p className="font-hand mx-auto max-w-xs text-2xl leading-snug text-cocoasoft">
-            {siteConfig.easterEggHint}
+            {site.easterEggHint}
           </p>
           <button
             onClick={tapFlower}
@@ -81,6 +83,7 @@ export default function EasterEgg() {
 }
 
 function Colophon({ onHeartTap }: { onHeartTap?: () => void }) {
+  const site = useSite();
   return (
     <footer className="border-t-2 border-dashed border-cocoa/20 bg-cream px-6 py-12 text-center">
       <FlowerDoodle className="mx-auto h-10 w-10" />
@@ -88,7 +91,7 @@ function Colophon({ onHeartTap }: { onHeartTap?: () => void }) {
         “I didn&apos;t just make you a birthday page. I made you a little handmade world.”
       </p>
       <p className="mt-5 text-[11px] font-bold uppercase tracking-[0.28em] text-cocoasoft">
-        Bound with love by {siteConfig.myName}
+        Bound with love by {site.myName}
         <button
           onClick={onHeartTap}
           aria-label="A tiny heart, nothing to see here"

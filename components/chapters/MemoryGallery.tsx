@@ -5,13 +5,15 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
 import SmartImage from "../SmartImage";
 import Reveal, { ChapterLabel } from "../Reveal";
-import { memories } from "@/config/birthday";
+import { useSite } from "../SiteContext";
 
 /**
  * Scene D — the photo drawer. A masonry-style collage of mixed sizes and
  * small rotations, like prints spread on a table. Tap to open the lightbox.
  */
-export default function MemoryGallery() {
+export default function MemoryGallery({ index = "04" }: { index?: string }) {
+  const site = useSite();
+  const memories = site.memories;
   const [lightbox, setLightbox] = useState<number | null>(null);
 
   const close = useCallback(() => setLightbox(null), []);
@@ -40,7 +42,7 @@ export default function MemoryGallery() {
       <div className="mx-auto max-w-6xl">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
-            <ChapterLabel index="04" title="Small moments, big meaning" />
+            <ChapterLabel index={index} title="Small moments, big meaning" />
             <Reveal>
               <h2 className="font-display max-w-xl text-4xl font-semibold leading-[1.02] sm:text-6xl">
                 Pinned to <span className="italic text-cherry">the board</span>

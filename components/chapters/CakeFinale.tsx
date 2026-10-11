@@ -6,14 +6,16 @@ import { Wind, RotateCcw } from "lucide-react";
 import Reveal, { ChapterLabel } from "../Reveal";
 import Burst from "../Burst";
 import { FlowerDoodle } from "../Ornaments";
-import { finaleSection, siteConfig } from "@/config/birthday";
+import { useSite } from "../SiteContext";
 import { usePrefersReducedMotion } from "@/hooks/useMedia";
 
 const CANDLE_COUNT = 5;
 const CANDLE_COLORS = ["#C83D4D", "#DCA7AF", "#7A8B6F", "#E0A93E", "#A02C3C"];
 
 /** Scene G — the finale. A warm evening garden party, not a galaxy. */
-export default function CakeFinale() {
+export default function CakeFinale({ index = "09" }: { index?: string }) {
+  const site = useSite();
+  const finaleSection = site.finaleSection;
   const [lit, setLit] = useState<boolean[]>(Array(CANDLE_COUNT).fill(true));
   const [celebrating, setCelebrating] = useState(false);
   const [burst, setBurst] = useState(false);
@@ -150,7 +152,7 @@ export default function CakeFinale() {
       <FlowerDoodle petal="#F4D98B" className="absolute right-6 top-40 h-10 w-10 rotate-12 opacity-80" />
 
       <div className="relative mx-auto max-w-2xl pt-10 text-center">
-        <ChapterLabel index="09" title="Make a wish" align="center" tone="light" />
+        <ChapterLabel index={index} title="Make a wish" align="center" tone="light" />
         <Reveal>
           <h2 className="font-display text-4xl font-semibold text-ivory sm:text-6xl">{finaleSection.heading}</h2>
           <p className="mt-3 text-sm font-semibold text-ivory/80">
@@ -215,7 +217,7 @@ export default function CakeFinale() {
                   ))}
                 </div>
                 <span className="font-hand absolute left-1/2 top-1/2 -translate-x-1/2 text-2xl text-cocoa">
-                  {siteConfig.girlfriendNickname !== "[NICKNAME]" ? siteConfig.girlfriendNickname : "for you"}
+                  {site.girlfriendNickname !== "[NICKNAME]" ? site.girlfriendNickname : "for you"}
                 </span>
               </div>
               <div className="mx-auto h-3.5 w-[108%] -translate-x-[3.7%] rounded-full border-2 border-cocoa bg-butter" />
@@ -264,7 +266,7 @@ export default function CakeFinale() {
               <h3 className="font-display text-4xl font-semibold leading-tight sm:text-5xl">
                 Happy Birthday,
                 <br />
-                <span className="marker italic">{siteConfig.girlfriendName}</span>
+                <span className="marker italic">{site.girlfriendName}</span>
               </h3>
               <p className="font-display mx-auto mt-5 max-w-lg text-xl italic leading-relaxed">
                 “{finaleSection.wish}”
@@ -272,7 +274,7 @@ export default function CakeFinale() {
               <p className="mx-auto mt-4 max-w-lg text-[15px] font-medium leading-relaxed text-cocoasoft">
                 {finaleSection.finalLine}
               </p>
-              <p className="font-hand mt-6 -rotate-2 text-4xl text-cherry">— {siteConfig.myName}</p>
+              <p className="font-hand mt-6 -rotate-2 text-4xl text-cherry">— {site.myName}</p>
               <Burst fired={burst} count={34} spread={260} />
             </motion.div>
           )}

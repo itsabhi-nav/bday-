@@ -2,3 +2,9 @@ next-env.d.ts
 node_modules
 .next
 out
+
+# local business data (never commit customer passwords)
+data/
+public/uploads/
+.env*.local
+tsconfig.tsbuildinfo

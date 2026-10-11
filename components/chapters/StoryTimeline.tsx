@@ -3,17 +3,18 @@
 import { motion } from "framer-motion";
 import SmartImage from "../SmartImage";
 import Reveal, { ChapterLabel } from "../Reveal";
-import { timeline } from "@/config/birthday";
+import { useSite } from "../SiteContext";
 
 /**
  * Scene C — the album. Journal entries taped to the page, joined by a
  * dashed twine spine. Alternating sides on desktop, single column on mobile.
  */
-export default function StoryTimeline() {
+export default function StoryTimeline({ index = "03" }: { index?: string }) {
+  const site = useSite();
   return (
     <section aria-label="Our story" className="relative bg-ivory px-6 py-20 sm:py-28">
       <div className="mx-auto max-w-5xl">
-        <ChapterLabel index="03" title="Our story, so far" />
+        <ChapterLabel index={index} title="Our story, so far" />
         <div className="flex flex-wrap items-end justify-between gap-4">
           <Reveal>
             <h2 className="font-display max-w-xl text-4xl font-semibold leading-[1.02] sm:text-6xl">
@@ -33,7 +34,7 @@ export default function StoryTimeline() {
             aria-hidden
             className="absolute bottom-6 left-[13px] top-6 border-l-2 border-dashed border-rose sm:left-1/2"
           />
-          {timeline.map((m, i) => {
+          {site.timeline.map((m, i) => {
             const left = i % 2 === 0;
             return (
               <motion.li

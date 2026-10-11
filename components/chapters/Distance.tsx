@@ -3,10 +3,12 @@
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import Reveal, { ChapterLabel } from "../Reveal";
-import { distanceSection } from "@/config/birthday";
+import { useSite } from "../SiteContext";
 
 /** Warm postcard interlude — two stamped cards joined by twine that draws on scroll. */
-export default function Distance() {
+export default function Distance({ index = "07" }: { index?: string }) {
+  const site = useSite();
+  const distanceSection = site.distanceSection;
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
   const draw = useTransform(scrollYProgress, [0.25, 0.75], [0, 1]);
@@ -14,7 +16,7 @@ export default function Distance() {
   return (
     <section aria-label="If you were here right now" className="relative bg-ivory px-6 py-20 sm:py-28">
       <div ref={ref} className="mx-auto max-w-4xl text-center">
-        <ChapterLabel index="07" title="Across the miles" align="center" />
+        <ChapterLabel index={index} title="Across the miles" align="center" />
         <Reveal>
           <h2 className="font-display mx-auto max-w-xl text-4xl font-semibold leading-tight sm:text-5xl">
             {distanceSection.heading}

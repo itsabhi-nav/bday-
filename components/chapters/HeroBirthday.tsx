@@ -5,35 +5,36 @@ import { Cake, Gift, Heart } from "lucide-react";
 import SmartImage from "../SmartImage";
 import Reveal, { ChapterLabel } from "../Reveal";
 import { FlowerDoodle, Marquee, StickerBadge, ScribbleUnderline, DoodleArrow } from "../Ornaments";
-import { siteConfig, coverPhotos } from "@/config/birthday";
+import { useSite } from "../SiteContext";
 
 /** Scene A — the birthday cover. Editorial, asymmetric, portrait-forward. */
-export default function HeroBirthday() {
+export default function HeroBirthday({ index = "01" }: { index?: string }) {
+  const site = useSite();
   return (
     <section aria-label="Happy birthday" className="relative overflow-hidden">
       {/* ribbon on top */}
       <div className="pt-14 sm:pt-20">
         <Marquee
           fast
-          items={[`happy birthday ${siteConfig.girlfriendName}`, siteConfig.birthdayDate, "the birthday girl", "made with love"]}
+          items={[`happy birthday ${site.girlfriendName}`, site.birthdayDate, "the birthday girl", "made with love"]}
           className="bg-cocoa text-butter"
         />
       </div>
 
       <div className="mx-auto max-w-6xl px-6 pb-20 pt-12 sm:pt-16">
         <div className="flex items-start justify-between gap-4">
-          <ChapterLabel index="01" title="The birthday girl" />
+          <ChapterLabel index={index} title="The birthday girl" />
           {/* date stamp */}
           <motion.div
             initial={{ opacity: 0, rotate: 12, scale: 0.8 }}
             whileInView={{ opacity: 1, rotate: 8, scale: 1 }}
             viewport={{ once: true }}
             transition={{ delay: 0.5, type: "spring", damping: 12 }}
-            aria-label={`Birthday date: ${siteConfig.birthdayDate}`}
+            aria-label={`Birthday date: ${site.birthdayDate}`}
             className="hidden shrink-0 rounded-full border-2 border-cherry px-5 py-2 text-center sm:block"
           >
             <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-cherry">Save the date</p>
-            <p className="font-display text-lg font-semibold">{siteConfig.birthdayDate}</p>
+            <p className="font-display text-lg font-semibold">{site.birthdayDate}</p>
           </motion.div>
         </div>
 
@@ -42,9 +43,9 @@ export default function HeroBirthday() {
           <div>
             <Reveal>
               <h2 className="font-display text-[15vw] font-semibold leading-[0.92] tracking-tight sm:text-7xl lg:text-[5.2rem]">
-                {siteConfig.heroHeadline},
+                {site.heroHeadline},
                 <br />
-                <span className="marker italic">{siteConfig.girlfriendName}</span>
+                <span className="marker italic">{site.girlfriendName}</span>
               </h2>
             </Reveal>
             <Reveal delay={0.1}>
@@ -52,7 +53,7 @@ export default function HeroBirthday() {
             </Reveal>
             <Reveal delay={0.15}>
               <p className="mt-6 max-w-md text-base font-medium leading-relaxed text-cocoasoft sm:text-lg">
-                {siteConfig.heroSubline}
+                {site.heroSubline}
               </p>
             </Reveal>
             {/* fun chips */}
@@ -75,7 +76,7 @@ export default function HeroBirthday() {
             </Reveal>
             <Reveal delay={0.25}>
               <div className="mt-7 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs font-bold uppercase tracking-[0.22em] text-cocoasoft">
-                <span>{siteConfig.birthdayDate}</span>
+                <span>{site.birthdayDate}</span>
                 <span aria-hidden className="h-1 w-1 rounded-full bg-cherry" />
                 <span>Chapter one of your day</span>
               </div>
@@ -106,14 +107,14 @@ export default function HeroBirthday() {
               <span className="tape -top-3 left-8 -rotate-12" aria-hidden />
               <span className="tape tape-rose -top-2 right-8 rotate-[14deg]" aria-hidden />
               <SmartImage
-                src={coverPhotos.hero.src}
-                alt={coverPhotos.hero.alt}
+                src={site.coverHero.src}
+                alt={site.coverHero.alt}
                 priority
                 className="aspect-[4/5] w-full"
                 sizes="(max-width: 1024px) 90vw, 480px"
               />
               <figcaption className="font-hand absolute inset-x-0 bottom-3 text-center text-[1.7rem] leading-none text-cocoa">
-                {coverPhotos.hero.caption}
+                {site.coverHero.caption}
               </figcaption>
             </motion.figure>
             {/* overlapping mini print */}
@@ -125,13 +126,13 @@ export default function HeroBirthday() {
               className="absolute -bottom-10 -left-4 w-28 bg-white p-1.5 pb-5 shadow-photo sm:-left-10 sm:w-36"
             >
               <SmartImage
-                src={coverPhotos.noteB.src}
-                alt={coverPhotos.noteB.alt}
+                src={site.coverNoteB.src}
+                alt={site.coverNoteB.alt}
                 className="aspect-square w-full"
                 sizes="200px"
               />
               <figcaption className="font-hand pt-1 text-center text-lg leading-none">
-                {coverPhotos.noteB.caption}
+                {site.coverNoteB.caption}
               </figcaption>
             </motion.figure>
           </Reveal>

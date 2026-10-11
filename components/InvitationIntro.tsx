@@ -7,7 +7,7 @@ import SmartImage from "./SmartImage";
 import Burst from "./Burst";
 import { FlowerDoodle, Sprig, Marquee, StickerBadge, ScribbleUnderline, TicketStub, FloatingHearts } from "./Ornaments";
 import { playMusic } from "@/lib/music";
-import { siteConfig, coverPhotos } from "@/config/birthday";
+import { useSite } from "./SiteContext";
 
 interface Props {
   onEnter: () => void;
@@ -18,6 +18,7 @@ interface Props {
  * The envelope IS the button. Music starts inside the same tap gesture.
  */
 export default function InvitationIntro({ onEnter }: Props) {
+  const site = useSite();
   const [stage, setStage] = useState<"idle" | "opening" | "gone">("idle");
   const [burst, setBurst] = useState(false);
   const reduce = useReducedMotion();
@@ -89,7 +90,7 @@ export default function InvitationIntro({ onEnter }: Props) {
             transition={{ delay: 0.25, duration: 0.7 }}
             className="font-hand text-2xl text-cherry sm:text-3xl"
           >
-            {siteConfig.inviteKicker}
+            {site.inviteKicker}
           </motion.p>
           <motion.h1
             initial={{ opacity: 0, y: 26 }}
@@ -97,9 +98,9 @@ export default function InvitationIntro({ onEnter }: Props) {
             transition={{ delay: 0.45, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
             className="font-display mt-3 text-[17vw] font-semibold leading-[0.95] tracking-tight sm:text-7xl lg:text-[5.6rem]"
           >
-            {siteConfig.inviteHeadlineA}
+            {site.inviteHeadlineA}
             <br />
-            <span className="italic text-cherry">{siteConfig.inviteHeadlineB}</span>
+            <span className="italic text-cherry">{site.inviteHeadlineB}</span>
           </motion.h1>
           <motion.div
             initial={{ opacity: 0, scaleX: 0 }}
@@ -115,7 +116,7 @@ export default function InvitationIntro({ onEnter }: Props) {
             transition={{ delay: 0.8, duration: 0.8 }}
             className="mx-auto mt-5 max-w-sm text-[15px] font-medium leading-relaxed text-cocoasoft lg:mx-0"
           >
-            {siteConfig.inviteSubline}
+            {site.inviteSubline}
           </motion.p>
 
           <motion.div
@@ -131,7 +132,7 @@ export default function InvitationIntro({ onEnter }: Props) {
             >
               <span aria-hidden className="animate-ping-soft absolute inset-0 rounded-full bg-cherry" />
               <MailOpen className="relative h-4 w-4 transition-transform group-hover:-rotate-12" aria-hidden />
-              <span className="relative">{siteConfig.inviteCta}</span>
+              <span className="relative">{site.inviteCta}</span>
             </button>
             <button
               onClick={() => open(false)}
@@ -157,7 +158,7 @@ export default function InvitationIntro({ onEnter }: Props) {
             className="absolute -left-2 top-16 w-32 -rotate-[9deg] bg-white p-1.5 pb-6 shadow-photo sm:w-40"
           >
             <SmartImage
-              src={coverPhotos.invite.src}
+              src={site.coverInvite.src}
               alt=""
               className="aspect-[4/5] w-full"
               sizes="200px"
@@ -169,7 +170,7 @@ export default function InvitationIntro({ onEnter }: Props) {
           </div>
           {/* ticket stub tucked under envelope */}
           <div aria-hidden className="absolute -bottom-2 left-0 z-10 hidden -rotate-6 sm:block">
-            <TicketStub name={siteConfig.girlfriendName} />
+            <TicketStub name={site.girlfriendName} />
           </div>
 
           {/* the envelope button */}
@@ -188,7 +189,7 @@ export default function InvitationIntro({ onEnter }: Props) {
                 transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
               >
                 <span className="font-hand block text-2xl leading-tight text-cherry">
-                  for {siteConfig.girlfriendName}
+                  for {site.girlfriendName}
                 </span>
                 <span className="mt-1 block h-1.5 w-3/4 rounded bg-blush" />
                 <span className="mt-1.5 block h-1.5 w-full rounded bg-cream" />
@@ -249,7 +250,7 @@ export default function InvitationIntro({ onEnter }: Props) {
         className="relative pb-8"
       >
         <Marquee
-          items={[`happy birthday ${siteConfig.girlfriendName}`, "a surprise made with love", "open me", "today is all about you"]}
+          items={[`happy birthday ${site.girlfriendName}`, "a surprise made with love", "open me", "today is all about you"]}
         />
       </motion.div>
 

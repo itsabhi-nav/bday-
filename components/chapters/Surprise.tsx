@@ -6,10 +6,12 @@ import Reveal, { ChapterLabel } from "../Reveal";
 import Burst from "../Burst";
 import ScratchCard from "../ScratchCard";
 import { FlowerDoodle } from "../Ornaments";
-import { surpriseSection } from "@/config/birthday";
+import { useSite } from "../SiteContext";
 
 /** Scene F — the gift. Kraft box, ribbon, paper flower. Untie → petal burst. */
-export default function Surprise() {
+export default function Surprise({ index = "08" }: { index?: string }) {
+  const site = useSite();
+  const surpriseSection = site.surpriseSection;
   const [opened, setOpened] = useState(false);
   const [burst, setBurst] = useState(false);
 
@@ -22,7 +24,7 @@ export default function Surprise() {
   return (
     <section aria-label="Birthday surprise" className="relative overflow-hidden bg-blush px-6 py-20 sm:py-28">
       <div className="relative mx-auto max-w-2xl text-center">
-        <ChapterLabel index="08" title="Psst… one more thing" align="center" />
+        <ChapterLabel index={index} title="Psst… one more thing" align="center" />
         <Reveal>
           <h2 className="font-display text-4xl font-semibold sm:text-5xl">{surpriseSection.prompt}</h2>
           <p className="font-hand mt-2 text-2xl text-cocoasoft">{surpriseSection.hint}</p>

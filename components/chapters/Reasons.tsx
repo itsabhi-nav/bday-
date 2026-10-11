@@ -6,7 +6,7 @@ import { X } from "lucide-react";
 import SmartImage from "../SmartImage";
 import Reveal, { ChapterLabel } from "../Reveal";
 import { FlowerDoodle } from "../Ornaments";
-import { reasons, coverPhotos } from "@/config/birthday";
+import { useSite } from "../SiteContext";
 
 /**
  * Scene B — things I adore. Notes, cutouts and mini-prints scattered like a
@@ -14,7 +14,9 @@ import { reasons, coverPhotos } from "@/config/birthday";
  */
 const TILTS = ["-rotate-3", "rotate-2", "-rotate-1", "rotate-3", "-rotate-2", "rotate-1"];
 
-export default function Reasons() {
+export default function Reasons({ index = "05" }: { index?: string }) {
+  const site = useSite();
+  const reasons = site.reasons;
   const [opened, setOpened] = useState<Set<number>>(new Set());
   const [focused, setFocused] = useState<number | null>(null);
 
@@ -29,7 +31,7 @@ export default function Reasons() {
       <FlowerDoodle petal="#DCA7AF" className="absolute bottom-24 right-8 h-14 w-14 rotate-12 opacity-70" aria-hidden />
       <div className="relative mx-auto max-w-6xl">
         <div className="mx-auto max-w-2xl text-center">
-          <ChapterLabel index="05" title="Things I adore" align="center" />
+          <ChapterLabel index={index} title="Things I adore" align="center" />
           <Reveal>
             <h2 className="font-display text-4xl font-semibold leading-[1.02] sm:text-6xl">
               A desk full of <span className="marker italic">little notes</span>
@@ -54,7 +56,7 @@ export default function Reasons() {
           {reasons.map((r, i) => {
             const isOpen = opened.has(i);
             const showMiniPrint = i === 2 || i === 6;
-            const photo = i === 2 ? coverPhotos.noteA : coverPhotos.noteB;
+            const photo = i === 2 ? site.coverNoteA : site.coverNoteB;
             return (
               <motion.button
                 key={i}

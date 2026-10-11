@@ -4,11 +4,13 @@ import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { BookOpen } from "lucide-react";
 import Reveal, { ChapterLabel } from "../Reveal";
-import { loveLetter } from "@/config/birthday";
+import { useSite } from "../SiteContext";
 import { usePrefersReducedMotion } from "@/hooks/useMedia";
 
 /** Scene E — the letter. Quiet ivory moment, wax-sealed envelope, lined paper. */
-export default function LoveLetter() {
+export default function LoveLetter({ index = "06" }: { index?: string }) {
+  const site = useSite();
+  const loveLetter = site.loveLetter;
   const [open, setOpen] = useState(false);
   const [count, setCount] = useState(0);
   const [showAll, setShowAll] = useState(false);
@@ -45,7 +47,7 @@ export default function LoveLetter() {
   return (
     <section aria-label="A letter for you" className="relative bg-cream px-6 py-20 sm:py-28">
       <div className="mx-auto max-w-2xl text-center">
-        <ChapterLabel index="06" title="Sealed with a kiss" align="center" />
+        <ChapterLabel index={index} title="Sealed with a kiss" align="center" />
         <Reveal>
           <h2 className="font-display text-4xl font-semibold sm:text-5xl">{loveLetter.heading}</h2>
         </Reveal>

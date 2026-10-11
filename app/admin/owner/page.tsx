@@ -1,0 +1,281 @@
+"use client";
+
+import { useCallback, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { Plus, Trash2, Copy, LogOut, ExternalLink, KeyRound, CalendarClock } from "lucide-react";
+import { slugify } from "@/lib/sitedata";
+
+interface Customer {
+  username: string;
+  slug: string;
+  girlName: string;
+  createdAt: string;
+  expiresAt: string | null;
+}
+
+export default function OwnerDashboard() {
+  const router = useRouter();
+  const [customers, setCustomers] = useState<Customer[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [form, setForm] = useState({ username: "", girlName: "", slug: "", password: "9872", expiresAt: "" });
+  const [creating, setCreating] = useState(false);
+  const [createdLink, setCreatedLink] = useState("");
+  const [expiryEdits, setExpiryEdits] = useState<Record<string, string>>({});
+  const [pwEdits, setPwEdits] = useState<Record<string, string>>({});
+  const [busyUser, setBusyUser] = useState("");
+
+  const load = useCallback(async () => {
+    const res = await fetch("/api/owner/customers");
+    if (res.status === 403 || res.status === 401) {
+      router.replace("/admin");
+      return;
+    }
+    const json = await res.json();
+    setCustomers(json.customers || []);
+    setLoading(false);
+  }, [router]);
+
+  useEffect(() => {
+    void load();
+  }, [load]);
+
+  const logout = async () => {
+    await fetch("/api/auth", { method: "DELETE" });
+    router.push("/admin");
+  };
+
+  const create = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setCreating(true);
+    setError("");
+    setCreatedLink("");
+    try {
+      const res = await fetch("/api/owner/customers", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username: form.username,
+          girlName: form.girlName,
+          slug: form.slug || undefined,
+          password: form.password || undefined,
+          expiresAt: form.expiresAt || null,
+        }),
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || "Failed");
+      setCreatedLink(`${window.location.origin}/${json.slug}`);
+      setForm({ username: "", girlName: "", slug: "", password: "9872", expiresAt: "" });
+      await load();
+    } catch (err) {
+      setError((err as Error).message);
+    } finally {
+      setCreating(false);
+    }
+  };
+
+  const saveExpiry = async (username: string) => {
+    setBusyUser(username);
+    setError("");
+    try {
+      const v = expiryEdits[username];
+      const res = await fetch(`/api/owner/customers/${username}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ expiresAt: v || null }),
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || "Failed");
+      await load();
+    } catch (err) {
+      setError((err as Error).message);
+    } finally {
+      setBusyUser("");
+    }
+  };
+
+  const resetPassword = async (username: string) => {
+    const pw = pwEdits[username] || "9872";
+    if (!window.confirm(`Set ${username}'s password to "${pw}"?`)) return;
+    setBusyUser(username);
+    setError("");
+    try {
+      const res = await fetch(`/api/owner/customers/${username}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password: pw }),
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || "Failed");
+      setPwEdits((p) => ({ ...p, [username]: "" }));
+      alert(`Done. ${username} / ${pw}`);
+    } catch (err) {
+      setError((err as Error).message);
+    } finally {
+      setBusyUser("");
+    }
+  };
+
+  const remove = async (c: Customer) => {
+    if (!window.confirm(`Delete ${c.username} (${c.girlName})?\n\nThis wipes their page AND all uploaded photos forever.`)) return;
+    if (!window.confirm("Pakka? This cannot be undone.")) return;
+    setBusyUser(c.username);
+    setError("");
+    try {
+      await fetch(`/api/owner/customers/${c.username}`, { method: "DELETE" });
+      await load();
+    } catch (err) {
+      setError((err as Error).message);
+    } finally {
+      setBusyUser("");
+    }
+  };
+
+  const copy = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch {
+      /* ignore */
+    }
+  };
+
+  if (loading) {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-cream text-cocoa">
+        <p className="font-hand text-3xl">opening the boss room…</p>
+      </main>
+    );
+  }
+
+  return (
+    <main className="min-h-screen bg-cream px-4 py-8 text-cocoa sm:px-8">
+      <div className="mx-auto max-w-5xl">
+        <header className="flex flex-wrap items-center gap-3">
+          <div>
+            <p className="font-hand text-2xl text-cherry">boss room</p>
+            <h1 className="font-display text-4xl font-semibold">Customers</h1>
+          </div>
+          <button onClick={logout} className="ml-auto flex items-center gap-1.5 rounded-full bg-cocoa/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] transition hover:bg-cocoa/20">
+            <LogOut className="h-4 w-4" aria-hidden /> Out
+          </button>
+        </header>
+
+        {error && (
+          <p role="alert" className="mt-4 bg-cherry/10 px-4 py-2 text-sm font-bold text-cherry">
+            {error}
+          </p>
+        )}
+
+        {/* create */}
+        <form onSubmit={create} className="relative mt-6 border border-cocoa/15 bg-[#FFFDF7] p-6 shadow-photo">
+          <span className="tape -top-3 left-8 -rotate-6" aria-hidden />
+          <h2 className="font-display text-2xl font-semibold">New customer</h2>
+          <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+            <label className="text-xs font-bold uppercase tracking-[0.14em]">
+              Username (login)
+              <input required value={form.username} onChange={(e) => setForm({ ...form, username: e.target.value.toLowerCase().replace(/[^a-z0-9-_]/g, "") })} placeholder="aarav" className="mt-1 w-full rounded-md border-2 border-cocoa/25 bg-ivory px-3 py-2 text-sm normal-case tracking-normal" />
+            </label>
+            <label className="text-xs font-bold uppercase tracking-[0.14em]">
+              Girl name
+              <input required value={form.girlName} onChange={(e) => {
+                const g = e.target.value;
+                setForm((f) => ({ ...f, girlName: g, slug: f.slug || slugify(g) }));
+              }} placeholder="Rinki Kumari" className="mt-1 w-full rounded-md border-2 border-cocoa/25 bg-ivory px-3 py-2 text-sm normal-case tracking-normal" />
+            </label>
+            <label className="text-xs font-bold uppercase tracking-[0.14em]">
+              Page URL
+              <input value={form.slug} onChange={(e) => setForm({ ...form, slug: e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, "") })} placeholder="rinki-kumari" className="mt-1 w-full rounded-md border-2 border-cocoa/25 bg-ivory px-3 py-2 text-sm normal-case tracking-normal" />
+            </label>
+            <label className="text-xs font-bold uppercase tracking-[0.14em]">
+              Password (default 9872)
+              <input value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} placeholder="9872" className="mt-1 w-full rounded-md border-2 border-cocoa/25 bg-ivory px-3 py-2 text-sm normal-case tracking-normal" />
+            </label>
+            <label className="text-xs font-bold uppercase tracking-[0.14em]">
+              Valid till (optional)
+              <input type="date" value={form.expiresAt} onChange={(e) => setForm({ ...form, expiresAt: e.target.value })} className="mt-1 w-full rounded-md border-2 border-cocoa/25 bg-ivory px-3 py-2 text-sm normal-case tracking-normal" />
+            </label>
+          </div>
+          <button type="submit" disabled={creating} className="shadow-scrap-sm mt-4 flex items-center gap-1.5 rounded-full bg-cherry px-6 py-2.5 text-xs font-bold uppercase tracking-[0.16em] text-ivory transition hover:bg-cherrydeep disabled:opacity-60">
+            <Plus className="h-4 w-4" aria-hidden /> {creating ? "Creating…" : "Create + get link"}
+          </button>
+          {createdLink && (
+            <p className="mt-3 flex flex-wrap items-center gap-2 bg-sage/40 px-4 py-2.5 text-sm font-bold" role="status">
+              <span className="break-all">{createdLink}</span>
+              <button type="button" onClick={() => void copy(createdLink)} className="flex items-center gap-1 rounded-full bg-cocoa px-3 py-1 text-[11px] uppercase tracking-wider text-ivory">
+                <Copy className="h-3 w-3" aria-hidden /> Copy
+              </button>
+              <a href={`https://wa.me/?text=${encodeURIComponent(`For you ♥ ${createdLink}`)}`} target="_blank" rel="noreferrer" className="rounded-full bg-[#25D366] px-3 py-1 text-[11px] uppercase tracking-wider text-white">
+                WhatsApp
+              </a>
+            </p>
+          )}
+        </form>
+
+        {/* list */}
+        <div className="mt-8 space-y-4">
+          {customers.length === 0 && (
+            <p className="border border-dashed border-cocoa/30 p-8 text-center font-hand text-2xl text-cocoasoft">
+              no customers yet — create the first one above ↑
+            </p>
+          )}
+          {customers.map((c) => {
+            const expired = c.expiresAt && new Date(c.expiresAt).getTime() < Date.now();
+            const link = typeof window !== "undefined" ? `${window.location.origin}/${c.slug}` : `/${c.slug}`;
+            return (
+              <article key={c.username} className="border border-cocoa/15 bg-[#FFFDF7] p-5 shadow-photo">
+                <span className="flex flex-wrap items-center gap-2">
+                  <h3 className="font-display text-2xl font-semibold">{c.girlName}</h3>
+                  {expired && (
+                    <span className="rounded-full bg-cherry px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-ivory">
+                      Expired
+                    </span>
+                  )}
+                  <span className="ml-auto flex gap-2">
+                    <a href={`/${c.slug}`} target="_blank" rel="noreferrer" className="flex items-center gap-1 rounded-full bg-cream px-3 py-1.5 text-[11px] font-bold uppercase transition hover:bg-butter" title="Open page">
+                      <ExternalLink className="h-3.5 w-3.5" aria-hidden /> Page
+                    </a>
+                    <button onClick={() => void copy(link)} className="flex items-center gap-1 rounded-full bg-cream px-3 py-1.5 text-[11px] font-bold uppercase transition hover:bg-butter" title="Copy link">
+                      <Copy className="h-3.5 w-3.5" aria-hidden /> Link
+                    </button>
+                    <button onClick={() => void remove(c)} disabled={busyUser === c.username} className="flex items-center gap-1 rounded-full bg-cherry/10 px-3 py-1.5 text-[11px] font-bold uppercase text-cherry transition hover:bg-cherry hover:text-ivory disabled:opacity-50" title="Delete everything">
+                      <Trash2 className="h-3.5 w-3.5" aria-hidden /> Delete
+                    </button>
+                  </span>
+                </span>
+                <p className="mt-1 break-all font-mono text-xs font-bold text-cocoasoft">
+                  login: {c.username} · page: /{c.slug} · since {new Date(c.createdAt).toLocaleDateString("en-IN")}
+                </p>
+                <span className="mt-3 grid gap-2 sm:grid-cols-2">
+                  <label className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.12em]">
+                    <CalendarClock className="h-4 w-4 shrink-0 text-cherry" aria-hidden />
+                    <input
+                      type="date"
+                      value={expiryEdits[c.username] ?? (c.expiresAt ? c.expiresAt.slice(0, 10) : "")}
+                      onChange={(e) => setExpiryEdits((m) => ({ ...m, [c.username]: e.target.value }))}
+                      className="w-full rounded-md border-2 border-cocoa/25 bg-ivory px-2 py-1.5 text-xs normal-case"
+                    />
+                    <button onClick={() => void saveExpiry(c.username)} disabled={busyUser === c.username} className="shrink-0 rounded-full bg-sage px-3 py-1.5 text-[11px] uppercase">
+                      Set
+                    </button>
+                  </label>
+                  <label className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.12em]">
+                    <KeyRound className="h-4 w-4 shrink-0 text-cherry" aria-hidden />
+                    <input
+                      placeholder="new password (blank = 9872)"
+                      value={pwEdits[c.username] ?? ""}
+                      onChange={(e) => setPwEdits((m) => ({ ...m, [c.username]: e.target.value }))}
+                      className="w-full rounded-md border-2 border-cocoa/25 bg-ivory px-2 py-1.5 text-xs normal-case"
+                    />
+                    <button onClick={() => void resetPassword(c.username)} disabled={busyUser === c.username} className="shrink-0 rounded-full bg-butter px-3 py-1.5 text-[11px] uppercase">
+                      Reset
+                    </button>
+                  </label>
+                </span>
+              </article>
+            );
+          })}
+        </div>
+      </div>
+    </main>
+  );
+}
