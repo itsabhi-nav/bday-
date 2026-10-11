@@ -2,9 +2,14 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "For You, On Your Birthday",
+  title: "Surprise Studio — Handmade Birthday Pages",
   description:
-    "A little handmade world of surprises — a birthday gift made with love, one page at a time.",
+    "Uske birthday pe sirf ek link bhejo. Uske naam ka private surprise page — photos, letter, cake aur dher saara pyaar.",
+  openGraph: {
+    title: "Surprise Studio — Handmade Birthday Pages",
+    description: "Uske birthday pe sirf ek link bhejo. Live demo dekho ♥",
+    type: "website",
+  },
 };
 
 export const viewport: Viewport = {

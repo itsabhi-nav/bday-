@@ -138,6 +138,7 @@ export default function SiteEditor() {
   const [previewWidth, setPreviewWidth] = useState<"full" | "phone">("phone");
   const [showPreview, setShowPreview] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [me, setMe] = useState("");
   const [pw, setPw] = useState({ old: "", next: "" });
   const [pwMsg, setPwMsg] = useState("");
   const topRef = useRef<HTMLDivElement>(null);
@@ -157,6 +158,7 @@ export default function SiteEditor() {
         router.replace("/admin/owner");
         return;
       }
+      setMe(me.session.username);
       const res = await fetch("/api/site");
       if (!res.ok) {
         setError("Page load nahi hua. Refresh karo.");
@@ -285,6 +287,11 @@ export default function SiteEditor() {
           <span className="hidden text-xs font-bold uppercase tracking-[0.18em] text-cocoasoft sm:inline">
             {draft.girlfriendName || "uske liye"}
           </span>
+          {me && (
+            <span className="hidden rounded-full bg-cocoa/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.16em] text-cocoasoft md:inline">
+              @{me}
+            </span>
+          )}
           <span className="ml-auto flex items-center gap-2">
             {savedTick > 0 && !error && (
               <span className="flex items-center gap-1 text-xs font-bold text-green-700" role="status">

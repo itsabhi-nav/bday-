@@ -36,6 +36,10 @@ export async function PUT(req: Request) {
   if (!body.data || typeof body.data.girlfriendName !== "string") {
     return NextResponse.json({ error: "Invalid page data" }, { status: 400 });
   }
+  // storage-DoS guard: a page is text + photo URLs, never megabytes
+  if (JSON.stringify(body.data).length > 200 * 1024) {
+    return NextResponse.json({ error: "Page data too large — shorten text" }, { status: 400 });
+  }
   const store = getStore();
   const site = await store.getSiteByUsername(target);
   if (!site) return NextResponse.json({ error: "Page not found" }, { status: 404 });

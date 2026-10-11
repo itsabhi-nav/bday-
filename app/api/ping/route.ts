@@ -8,9 +8,10 @@ import { getStore } from "@/lib/db";
  */
 export async function GET() {
   try {
-    const customers = await getStore().listCustomers();
-    return NextResponse.json({ ok: true, db: "awake", customers: customers.length });
+    // touch the DB so free Supabase stays awake — but reveal nothing (no counts)
+    await getStore().listCustomers();
+    return NextResponse.json({ ok: true, db: "awake" });
   } catch (e) {
-    return NextResponse.json({ ok: false, error: (e as Error).message }, { status: 500 });
+    return NextResponse.json({ ok: false }, { status: 500 });
   }
 }

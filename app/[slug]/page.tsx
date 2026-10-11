@@ -1,8 +1,26 @@
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 import Journey from "@/components/Journey";
 import { getStore } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
+
+/** Private surprise pages stay out of Google — but WhatsApp previews still shine. */
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+  try {
+    const site = await getStore().getSite(params.slug);
+    if (site) {
+      return {
+        title: `For ${site.data.girlfriendName} ♥`,
+        description: "Someone made you a little surprise. Open it.",
+        robots: { index: false, follow: false },
+      };
+    }
+  } catch {
+    /* fall through to default */
+  }
+  return { robots: { index: false, follow: false } };
+}
 
 function Expired({ name }: { name: string }) {
   return (

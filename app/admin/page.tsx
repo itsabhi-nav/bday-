@@ -10,21 +10,32 @@ export default function AdminLogin() {
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const [checking, setChecking] = useState(true);
+  const [existing, setExisting] = useState<{ username: string; role: string } | null>(null);
   const router = useRouter();
 
-  // already logged in? skip the form, go straight in
+  // already logged in? offer to continue — or switch account (which asks password again)
   useEffect(() => {
     (async () => {
       try {
         const me = await fetch("/api/auth").then((r) => r.json());
-        if (me.session?.role === "owner") router.replace("/admin/owner");
-        else if (me.session) router.replace("/admin/site");
-        else setChecking(false);
+        if (me.session) setExisting(me.session);
       } catch {
+        /* offline — show the form */
+      } finally {
         setChecking(false);
       }
     })();
-  }, [router]);
+  }, []);
+
+  const go = (role: string) => {
+    router.push(role === "owner" ? "/admin/owner" : "/admin/site");
+    router.refresh();
+  };
+
+  const switchAccount = async () => {
+    await fetch("/api/auth", { method: "DELETE" });
+    setExisting(null);
+  };
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -51,6 +62,28 @@ export default function AdminLogin() {
     <main className="flex min-h-screen items-center justify-center bg-cream px-6 text-cocoa">
       {checking ? (
         <p className="font-hand text-3xl">checking login…</p>
+      ) : existing ? (
+        <div className="relative w-full max-w-sm border border-cocoa/15 bg-[#FFFDF7] p-8 text-center shadow-photo">
+          <span className="tape -top-3 left-1/2 -translate-x-1/2 -rotate-3" aria-hidden />
+          <p className="font-hand text-3xl text-cherry">welcome back!</p>
+          <p className="mt-2 text-sm font-medium text-cocoasoft">
+            Logged in as <b className="text-cocoa">{existing.username}</b>
+            {existing.role === "owner" ? " (boss)" : ""}
+          </p>
+          <button
+            onClick={() => go(existing.role)}
+            className="shadow-scrap-sm mt-5 w-full rounded-full bg-cherry px-6 py-3 text-sm font-bold uppercase tracking-[0.18em] text-ivory transition hover:bg-cherrydeep"
+            autoFocus
+          >
+            Continue →
+          </button>
+          <button
+            onClick={() => void switchAccount()}
+            className="mt-3 text-xs font-bold uppercase tracking-[0.2em] text-cocoasoft underline decoration-rose decoration-2 underline-offset-4 transition hover:text-cocoa"
+          >
+            Different account? Logout first
+          </button>
+        </div>
       ) : (
       <form
         onSubmit={submit}

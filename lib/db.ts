@@ -182,7 +182,10 @@ async function sb<T>(table: string, init: RequestInit & { query?: string } = {})
       ...(init.headers || {}),
     },
   });
-  if (!res.ok) throw new Error(`DB error: ${await res.text()}`);
+  if (!res.ok) {
+    // never leak database internals to the browser — callers throw their own friendly errors
+    throw new Error("Database temporarily unavailable, try again");
+  }
   const text = await res.text();
   return (text ? JSON.parse(text) : null) as T;
 }

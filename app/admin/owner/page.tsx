@@ -40,6 +40,8 @@ export default function OwnerDashboard() {
   const [expiryEdits, setExpiryEdits] = useState<Record<string, string>>({});
   const [pwEdits, setPwEdits] = useState<Record<string, string>>({});
   const [busyUser, setBusyUser] = useState("");
+  const [me, setMe] = useState("");
+  const [secure, setSecure] = useState(true);
 
   const load = useCallback(async () => {
     const res = await fetch("/api/owner/customers");
@@ -54,6 +56,15 @@ export default function OwnerDashboard() {
 
   useEffect(() => {
     void load();
+    (async () => {
+      try {
+        const me = await fetch("/api/auth").then((r) => r.json());
+        if (me.session) setMe(me.session.username);
+        if (me.secure === false) setSecure(false);
+      } catch {
+        /* ignore */
+      }
+    })();
   }, [load]);
 
   const logout = async () => {
@@ -176,11 +187,23 @@ export default function OwnerDashboard() {
           <div>
             <p className="font-hand text-2xl text-cherry">boss room</p>
             <h1 className="font-display text-4xl font-semibold">Customers</h1>
+            {me && (
+              <p className="mt-1 text-[11px] font-bold uppercase tracking-[0.2em] text-cocoasoft">
+                logged in as {me}
+              </p>
+            )}
           </div>
           <button onClick={logout} className="ml-auto flex items-center gap-1.5 rounded-full bg-cocoa/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] transition hover:bg-cocoa/20">
             <LogOut className="h-4 w-4" aria-hidden /> Out
           </button>
         </header>
+
+        {!secure && (
+          <p role="alert" className="mt-4 border-2 border-dashed border-cherry/60 bg-cherry/10 px-4 py-3 text-sm font-bold text-cherry">
+            SESSION_SECRET set nahi hai! Vercel → Settings → Environment Variables me
+            lambi random string dalo, warna koi bhi login bana sakta hai.
+          </p>
+        )}
 
         {error && (
           <p role="alert" className="mt-4 bg-cherry/10 px-4 py-2 text-sm font-bold text-cherry">

@@ -1,22 +1,48 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
-import { signSession, verifyPassword, ownerCreds } from "@/lib/auth";
+import { signSession, verifyPassword, ownerCreds, safeEqual, hasRealSecret } from "@/lib/auth";
 import { getStore } from "@/lib/db";
 
 const COOKIE = "bsess";
 
-function setSession(res: NextResponse, value: string) {
-  res.cookies.set(COOKIE, value, {
+// ── brute-force guard: max 10 login tries per IP per 10 minutes ──
+const attempts = new Map<string, number[]>();
+function rateLimited(ip: string): boolean {
+  const now = Date.now();
+  const list = (attempts.get(ip) || []).filter((t) => now - t < 10 * 60 * 1000);
+  list.push(now);
+  attempts.set(ip, list);
+  if (attempts.size > 5000) attempts.clear(); // memory hygiene
+  return list.length > 10;
+}
+
+function cookieFlags(maxAge: number) {
+  return {
     httpOnly: true,
-    sameSite: "lax",
+    sameSite: "lax" as const,
     secure: process.env.NODE_ENV === "production",
     path: "/",
-    maxAge: 30 * 86400,
-  });
+    maxAge,
+  };
+}
+
+function setSession(res: NextResponse, value: string) {
+  res.cookies.set(COOKIE, value, cookieFlags(30 * 86400));
 }
 
 /** POST {username, password} → sets session cookie, returns {role, redirect}. */
 export async function POST(req: Request) {
+  const ip =
+    req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+    req.headers.get("x-real-ip") ||
+    "unknown";
+  if (rateLimited(ip)) {
+    return NextResponse.json(
+      { error: "Too many tries — 10 minute ruko, phir try karo" },
+      { status: 429 }
+    );
+  }
+
   const { username, password } = (await req.json().catch(() => ({}))) as {
     username?: string;
     password?: string;
@@ -26,15 +52,15 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Username and password required" }, { status: 400 });
   }
 
-  // owner first
+  // owner first (constant-time compare)
   const owner = ownerCreds();
-  if (u === owner.user && password === owner.pass) {
+  if (safeEqual(u, owner.user) && safeEqual(password, owner.pass)) {
     const res = NextResponse.json({ role: "owner", redirect: "/admin/owner" });
     setSession(res, signSession({ username: u, role: "owner" }));
     return res;
   }
 
-  // then customers
+  // then customers — same error message either way (no username guessing)
   const customer = await getStore().getCustomer(u);
   if (customer && (await verifyPassword(password, customer.passHash))) {
     const res = NextResponse.json({ role: "customer", redirect: "/admin/site" });
@@ -47,7 +73,7 @@ export async function POST(req: Request) {
 
 export async function DELETE() {
   const res = NextResponse.json({ ok: true });
-  res.cookies.set(COOKIE, "", { path: "/", maxAge: 0 });
+  res.cookies.set(COOKIE, "", cookieFlags(0));
   return res;
 }
 
@@ -56,8 +82,11 @@ export async function GET() {
   const token = cookies().get(COOKIE)?.value;
   const { verifySession } = await import("@/lib/auth");
   const s = verifySession(token);
-  if (!s) return NextResponse.json({ session: null });
-  return NextResponse.json({ session: { username: s.username, role: s.role } });
+  if (!s) return NextResponse.json({ session: null, secure: hasRealSecret() });
+  return NextResponse.json({
+    session: { username: s.username, role: s.role },
+    secure: hasRealSecret(),
+  });
 }
 
 /** PATCH {oldPassword?, newPassword} → customer changes own password (owner: no old needed, pass username). */

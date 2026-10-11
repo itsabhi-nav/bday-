@@ -65,3 +65,22 @@ export function ownerCreds(): { user: string; pass: string } {
     pass: process.env.OWNER_PASS || "admin123",
   };
 }
+
+/** Constant-time string compare (no timing leaks on the owner login). */
+export function safeEqual(a: string, b: string): boolean {
+  const ab = Buffer.from(a);
+  const bb = Buffer.from(b);
+  if (ab.length !== bb.length) {
+    // still compare something to keep timing flat
+    const dummy = Buffer.alloc(Math.max(ab.length, bb.length));
+    timingSafeEqual(dummy, dummy);
+    return false;
+  }
+  return timingSafeEqual(ab, bb);
+}
+
+/** True only when a real SESSION_SECRET is configured (never ship default to prod). */
+export function hasRealSecret(): boolean {
+  const s = process.env.SESSION_SECRET || "";
+  return s.length >= 16 && s !== "dev-only-secret-change-in-production";
+}
