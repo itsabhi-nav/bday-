@@ -1,0 +1,262 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --ivory: #fff9f0;
+  --cream: #fdf1de;
+  --blush: #f7dce2;
+  --cherry: #c83d4d;
+  --cherry-deep: #a02c3c;
+  --butter: #f4d98b;
+  --rose: #dca7af;
+  --cocoa: #49312f;
+  --cocoa-soft: #7a5f5b;
+  --sage: #c7d1b8;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+html,
+body {
+  background: var(--ivory);
+  color: var(--cocoa);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  font-family: "Manrope", system-ui, sans-serif;
+}
+
+.font-display {
+  font-family: "Cormorant Garamond", Georgia, serif;
+}
+.font-hand {
+  font-family: "Caveat", cursive;
+}
+
+::selection {
+  background: var(--butter);
+  color: var(--cocoa);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--ivory);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--rose);
+  border-radius: 8px;
+  border: 2px solid var(--ivory);
+}
+
+:focus-visible {
+  outline: 2.5px solid var(--cherry);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+/* ————— paper grain, barely-there ————— */
+.paper-grain::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 60;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 220 220' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ————— editorial helpers ————— */
+
+/* butter marker highlight */
+.marker {
+  background-image: linear-gradient(to top, var(--butter) 38%, transparent 38%);
+  background-repeat: no-repeat;
+  padding: 0 0.08em;
+}
+.marker-rose {
+  background-image: linear-gradient(to top, var(--blush) 45%, transparent 45%);
+  background-repeat: no-repeat;
+  padding: 0 0.08em;
+}
+
+/* stitched scrapbook border */
+.stitch {
+  border: 1.5px dashed rgba(73, 49, 47, 0.35);
+}
+.stitch-light {
+  border: 1.5px dashed rgba(255, 249, 240, 0.4);
+}
+
+/* lined journal paper */
+.lined-paper {
+  background-color: #fffdf7;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 31px,
+    rgba(200, 61, 77, 0.12) 31px,
+    rgba(200, 61, 77, 0.12) 32px
+  );
+}
+
+/* washi tape strip */
+.tape {
+  position: absolute;
+  width: 92px;
+  height: 26px;
+  background: rgba(244, 217, 139, 0.75);
+  box-shadow: 0 1px 3px rgba(73, 49, 47, 0.18);
+  opacity: 0.9;
+  /* torn edges */
+  clip-path: polygon(
+    2% 0, 98% 4%, 100% 90%, 96% 100%, 3% 96%, 0 12%
+  );
+}
+.tape-rose {
+  background: rgba(220, 167, 175, 0.8);
+}
+.tape-sage {
+  background: rgba(199, 209, 184, 0.85);
+}
+
+/* hard offset shadow — playful editorial */
+.shadow-scrap {
+  box-shadow: 4px 4px 0 rgba(73, 49, 47, 0.9);
+}
+.shadow-scrap-sm {
+  box-shadow: 2.5px 2.5px 0 rgba(73, 49, 47, 0.9);
+}
+.shadow-photo {
+  box-shadow:
+    0 1px 2px rgba(73, 49, 47, 0.2),
+    0 12px 32px -12px rgba(73, 49, 47, 0.45);
+}
+
+/* candle flame */
+@keyframes flicker {
+  0%, 100% { transform: scale(1) rotate(-2deg); opacity: 1; }
+  25% { transform: scale(1.08, 1.15) rotate(2deg); opacity: 0.92; }
+  50% { transform: scale(0.94, 1.05) rotate(-1deg); opacity: 1; }
+  75% { transform: scale(1.05, 0.96) rotate(1deg); opacity: 0.95; }
+}
+.flame {
+  animation: flicker 1.6s ease-in-out infinite;
+  transform-origin: 50% 90%;
+}
+
+/* gentle float for tactile objects */
+@keyframes floaty {
+  0%, 100% { transform: translateY(0) rotate(var(--float-rot, 0deg)); }
+  50% { transform: translateY(-9px) rotate(var(--float-rot, 0deg)); }
+}
+.animate-floaty {
+  animation: floaty 6s ease-in-out infinite;
+}
+
+/* flower sway */
+@keyframes sway {
+  0%, 100% { transform: rotate(-4deg); }
+  50% { transform: rotate(5deg); }
+}
+.animate-sway {
+  animation: sway 7s ease-in-out infinite;
+  transform-origin: bottom center;
+}
+
+/* music equalizer */
+@keyframes eq {
+  0%, 100% { transform: scaleY(0.4); }
+  50% { transform: scaleY(1); }
+}
+.eq-bar {
+  animation: eq 0.9s ease-in-out infinite;
+  transform-origin: bottom;
+}
+
+/* slow spin for sticker badges */
+@keyframes spin-slower {
+  to { transform: rotate(360deg); }
+}
+.animate-spin-slower {
+  animation: spin-slower 18s linear infinite;
+}
+
+/* marquee ribbon */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.animate-marquee {
+  animation: marquee 22s linear infinite;
+}
+.animate-marquee-fast {
+  animation: marquee 14s linear infinite;
+}
+
+/* CTA shine sweep */
+@keyframes shine {
+  from { transform: translateX(-120%) skewX(-18deg); }
+  to { transform: translateX(240%) skewX(-18deg); }
+}
+.btn-shine {
+  position: relative;
+  overflow: hidden;
+}
+.btn-shine::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 40%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.45), transparent);
+  animation: shine 2.8s ease-in-out infinite;
+}
+
+/* pulsing ring on the main CTA */
+@keyframes ping-soft {
+  0% { transform: scale(1); opacity: 0.55; }
+  80%, 100% { transform: scale(1.18); opacity: 0; }
+}
+.animate-ping-soft {
+  animation: ping-soft 2.2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+/* drifting hearts */
+@keyframes drift-up {
+  0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+  12% { opacity: var(--heart-op, 0.5); }
+  85% { opacity: var(--heart-op, 0.5); }
+  100% { transform: translateY(-46vh) rotate(24deg); opacity: 0; }
+}
+.animate-drift-up {
+  animation: drift-up 9s linear infinite;
+}
+
+/* playful wobble for stickers */
+@keyframes wobble {
+  0%, 100% { transform: rotate(-4deg); }
+  50% { transform: rotate(4deg); }
+}
+.animate-wobble {
+  animation: wobble 4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
