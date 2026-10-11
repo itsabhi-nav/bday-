@@ -1,0 +1,20 @@
+name: Keep Supabase awake
+
+# Free Supabase projects pause after ~7 days with no traffic.
+# This pings our own /api/ping every 3 days (which touches the DB),
+# so the project stays awake forever. Setup: repo Settings → Secrets →
+# Actions → New secret → name: SITE_URL, value: https://for-ananya.vercel.app
+
+on:
+  schedule:
+    - cron: "30 3 */3 * *" # every 3 days, 03:30 UTC
+  workflow_dispatch: # manual "Run workflow" button also works
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping keep-alive endpoint
+        run: |
+          echo "Pinging ${{ secrets.SITE_URL }}/api/ping ..."
+          curl -s -o /dev/null -w "HTTP %{http_code}\n" --max-time 60 "${{ secrets.SITE_URL }}/api/ping"

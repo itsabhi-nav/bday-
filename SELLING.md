@@ -17,6 +17,18 @@ editor, WhatsApp share. Tumhe milta hai: **boss room** (owner panel).
      bechne ke liye Supabase must hai.)
 3. `/admin` kholo → owner login karo. Ho gaya, dukaan khul gayi.
 
+## 1b. Supabase ko sleep se bachao (2 min, important!)
+
+Free Supabase project **~7 din bina traffic ke pause** ho jata hai — phir
+saari pages down (restore dashboard se hota hai, par customer gussa hoga).
+Isliye auto keep-alive pehle se laga diya hai:
+
+1. GitHub repo → **Settings → Secrets → Actions → New repository secret**
+2. Name: `SITE_URL`, Value: tumhari live link (e.g. `https://for-ananya.vercel.app`)
+3. Bas. Ab har 3 din me GitHub Actions khud `/api/ping` bajayega (jo DB ko
+   chhoota hai) — project **kabhi soyega nahi**. Actions tab me "Keep Supabase
+   awake" me ticks dikhengi. Manual test ke liye "Run workflow" bhi daba sakte ho.
+
 ## 2. Order aaye to kya karna hai (2 min)
 
 1. Boss room (`/admin/owner`) → **New customer**:
