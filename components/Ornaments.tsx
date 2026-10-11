@@ -58,7 +58,7 @@ export function TornDivider({ from = "#FFF9F0", to = "#F7DCE2", flip = false }: 
   );
 }
 
-/** Scrolling ribbon band — instant energy. Duplicate content for a seamless loop. */
+/** Scrolling ribbon band — instant energy. Two identical halves for a truly seamless infinite loop. */
 export function Marquee({
   items,
   fast = false,
@@ -82,8 +82,10 @@ export function Marquee({
   );
   return (
     <div aria-hidden={false} className={`relative overflow-hidden ${tilt ? "-rotate-1" : ""}`}>
-      <div className={`flex w-max py-2.5 shadow-photo ${fast ? "animate-marquee-fast" : "animate-marquee"} ${className}`}>
+      <div className={`flex w-max py-2.5 shadow-photo [will-change:transform] ${fast ? "animate-marquee-fast" : "animate-marquee"} ${className}`}>
         {row(false)}
+        {row(true)}
+        {row(true)}
         {row(true)}
       </div>
     </div>

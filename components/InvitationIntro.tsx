@@ -143,7 +143,7 @@ export default function InvitationIntro({ onEnter }: Props) {
       <FlowerDoodle className="animate-sway absolute bottom-24 left-5 h-12 w-12 sm:h-16 sm:w-16" aria-hidden />
       <FlowerDoodle petal="#DCA7AF" className="animate-sway absolute bottom-10 right-6 h-10 w-10" aria-hidden />
 
-      <div className="relative mx-auto flex min-h-full w-full max-w-6xl flex-col items-center justify-center gap-10 px-6 pb-12 pt-24 sm:pt-28 lg:flex-row lg:gap-6 lg:px-12">
+      <div className="relative mx-auto flex min-h-full w-full max-w-6xl flex-col items-center justify-center gap-6 px-6 pb-24 pt-20 sm:pt-24 lg:flex-row lg:gap-6 lg:px-12">
         {/* ——— headline block ——— */}
         <div className="max-w-xl flex-1 text-center lg:text-left">
           {/* birthday badge */}
@@ -170,7 +170,7 @@ export default function InvitationIntro({ onEnter }: Props) {
             initial={{ opacity: 0, y: 26 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.45, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-            className="font-display mt-3 text-[17vw] font-semibold leading-[0.95] tracking-tight sm:text-7xl lg:text-[5.6rem]"
+            className="font-display mt-3 text-[13vw] font-semibold leading-[0.95] tracking-tight sm:text-7xl lg:text-[5.6rem]"
           >
             {site.inviteHeadlineA}
             <br />
@@ -202,7 +202,7 @@ export default function InvitationIntro({ onEnter }: Props) {
             <button
               onClick={open}
               aria-label="Open your surprise and begin the birthday celebration"
-              className="btn-shine group relative flex items-center gap-3 rounded-full border-2 border-cocoa bg-cherry px-10 py-5 text-base font-bold uppercase tracking-[0.18em] text-ivory transition-all hover:-translate-y-1 hover:bg-cherrydeep active:translate-y-0"
+              className="btn-shine group relative flex items-center gap-3 rounded-full border-2 border-cocoa bg-cherry px-8 py-4 text-sm font-bold uppercase tracking-[0.18em] text-ivory transition-all hover:-translate-y-1 hover:bg-cherrydeep active:translate-y-0 sm:px-10 sm:py-5 sm:text-base"
               style={{ boxShadow: "5px 5px 0 #49312F, 0 0 44px rgba(200,61,77,0.5)" }}
             >
               <span aria-hidden className="animate-ping-soft absolute inset-0 rounded-full bg-cherry" />
@@ -224,11 +224,11 @@ export default function InvitationIntro({ onEnter }: Props) {
         >
           {/* butter sun behind */}
           <div aria-hidden className="absolute -right-6 -top-8 h-36 w-36 rounded-full bg-butter/70" />
-          <Balloons className="animate-floaty absolute -top-16 right-0 z-10 h-28 w-32 sm:h-32 sm:w-36" />
+          <Balloons className="animate-floaty absolute -top-14 right-0 z-10 h-24 w-28 sm:h-32 sm:w-36" />
           {/* tucked polaroid */}
           <div
             aria-hidden
-            className="absolute -left-2 top-16 w-32 -rotate-[9deg] bg-white p-1.5 pb-6 shadow-photo sm:w-40"
+            className="absolute -left-2 top-16 w-24 -rotate-[9deg] bg-white p-1.5 pb-6 shadow-photo sm:w-40"
           >
             <SmartImage
               src={site.coverInvite.src}
@@ -239,7 +239,7 @@ export default function InvitationIntro({ onEnter }: Props) {
           </div>
           {/* spinning sticker */}
           <div aria-hidden className="absolute -right-2 top-24 z-10 sm:right-2">
-            <StickerBadge className="animate-wobble h-24 w-24 sm:h-28 sm:w-28" />
+            <StickerBadge className="animate-wobble h-20 w-20 sm:h-28 sm:w-28" />
           </div>
           {/* ticket stub tucked under envelope */}
           <div aria-hidden className="absolute -bottom-2 left-0 z-10 hidden -rotate-6 sm:block">
@@ -250,7 +250,7 @@ export default function InvitationIntro({ onEnter }: Props) {
           <button
             onClick={open}
             aria-label="Open the envelope"
-            className="animate-floaty relative mx-auto mt-10 block w-72 sm:w-80"
+            className="animate-floaty relative mx-auto mt-8 block w-60 sm:w-80"
             style={{ ["--float-rot" as string]: "1.5deg" }}
           >
             <span className="relative block overflow-visible rounded-lg border border-cocoa/25 bg-cream shadow-photo">
@@ -270,7 +270,7 @@ export default function InvitationIntro({ onEnter }: Props) {
               </motion.span>
 
               {/* envelope body */}
-              <span className="relative block h-48 overflow-hidden rounded-lg bg-cream sm:h-52">
+              <span className="relative block h-40 overflow-hidden rounded-lg bg-cream sm:h-52">
                 {/* side folds */}
                 <span
                   aria-hidden
@@ -320,12 +320,12 @@ export default function InvitationIntro({ onEnter }: Props) {
         </motion.div>
       </div>
 
-      {/* ribbon band along the bottom */}
+      {/* ribbon band fixed at the bottom — always visible, no scroll needed */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.3, duration: 0.8 }}
-        className="relative pb-8"
+        className="absolute inset-x-0 bottom-0"
       >
         <Marquee
           items={[`happy birthday ${site.girlfriendName}`, "cake, candles aur pyaar", "open me", "today is all about you"]}
