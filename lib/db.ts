@@ -92,15 +92,19 @@ class FileStore implements Store {
     if (!c) throw new Error("Customer not found");
     const ss = await this.sites();
     if (patch.slug && patch.slug !== c.slug) {
-      if (ss[patch.slug]) throw new Error("Page URL already taken");
-      const site = ss[c.slug];
-      delete ss[c.slug];
-      if (site) {
-        site.slug = patch.slug;
-        site.data.slug = patch.slug;
-        ss[patch.slug] = site;
+      const existing = ss[patch.slug];
+      // adopt: target page already belongs to this customer (mid-move state) → just relink
+      if (!existing || existing.username !== username) {
+        if (existing) throw new Error("Page URL already taken");
+        const site = ss[c.slug];
+        delete ss[c.slug];
+        if (site) {
+          site.slug = patch.slug;
+          site.data.slug = patch.slug;
+          ss[patch.slug] = site;
+        }
+        await writeJson("sites.json", ss);
       }
-      await writeJson("sites.json", ss);
     }
     cs[username] = { ...c, ...patch };
     await writeJson("customers.json", cs);
@@ -244,18 +248,26 @@ class SupabaseStore implements Store {
     if (patch.passHash !== undefined) body.pass_hash = patch.passHash;
     if (patch.expiresAt !== undefined) body.expires_at = patch.expiresAt;
     if (patch.slug !== undefined) {
-      if (await this.getSite(patch.slug)) throw new Error("Page URL already taken");
-      body.slug = patch.slug;
-      const site = await this.getSiteByUsername(username);
-      if (site) {
-        await sb("sites", {
-          method: "PATCH",
-          query: `?slug=eq.${encodeURIComponent(site.slug)}`,
-          body: JSON.stringify({ slug: patch.slug }),
-        });
-        site.slug = patch.slug;
-        site.data.slug = patch.slug;
-        await this.saveSite(site);
+      const target = await this.getSite(patch.slug);
+      // adopt: target page already belongs to this customer → just relink the row
+      if (target && target.username !== username) throw new Error("Page URL already taken");
+      if (!target || target.slug !== (await this.getCustomer(username))?.slug) {
+        if (!target) {
+          body.slug = patch.slug;
+          const site = await this.getSiteByUsername(username);
+          if (site) {
+            await sb("sites", {
+              method: "PATCH",
+              query: `?slug=eq.${encodeURIComponent(site.slug)}`,
+              body: JSON.stringify({ slug: patch.slug }),
+            });
+            site.slug = patch.slug;
+            site.data.slug = patch.slug;
+            await this.saveSite(site);
+          }
+        } else {
+          body.slug = patch.slug;
+        }
       }
     }
     if (Object.keys(body).length) {
