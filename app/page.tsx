@@ -35,7 +35,7 @@ export default function StudioHome() {
           {[
             { icon: Wand2, t: "Made for one person", d: "Her name, photos & stories — nothing generic." },
             { icon: Link2, t: "One private link", d: "yourdomain.com/her-name. Send on WhatsApp." },
-            { icon: Heart, t: "Interactive surprises", d: "Hugs, scratch gifts, candles & secrets." },
+            { icon: Heart, t: "Interactive surprises", d: "Hugs, candles, letters & secrets." },
           ].map(({ icon: Icon, t, d }) => (
             <div key={t} className="border border-cocoa/15 bg-[#FFFDF7] p-5 shadow-photo">
               <Icon className="h-5 w-5 text-cherry" aria-hidden />

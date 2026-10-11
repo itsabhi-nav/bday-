@@ -85,12 +85,9 @@ export default function EasterEgg() {
 function Colophon({ onHeartTap }: { onHeartTap?: () => void }) {
   const site = useSite();
   return (
-    <footer className="border-t-2 border-dashed border-cocoa/20 bg-cream px-6 py-12 text-center">
+    <footer className="border-t-2 border-dashed border-cocoa/20 bg-cream px-6 py-10 text-center">
       <FlowerDoodle className="mx-auto h-10 w-10" />
-      <p className="font-display mx-auto mt-4 max-w-md text-2xl italic leading-snug">
-        “I didn&apos;t just make you a birthday page. I made you a little handmade world.”
-      </p>
-      <p className="mt-5 text-[11px] font-bold uppercase tracking-[0.28em] text-cocoasoft">
+      <p className="mt-4 text-[11px] font-bold uppercase tracking-[0.28em] text-cocoasoft">
         Bound with love by {site.myName}
         <button
           onClick={onHeartTap}
@@ -99,9 +96,6 @@ function Colophon({ onHeartTap }: { onHeartTap?: () => void }) {
         >
           ♥<span className="sr-only">secret</span>
         </button>
-      </p>
-      <p className="mt-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-cocoasoft/70">
-        Set in Cormorant Garamond, Manrope & Caveat · Photos: temporary stand-ins
       </p>
     </footer>
   );

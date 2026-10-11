@@ -66,7 +66,7 @@ export default function HeroBirthday({ index = "01" }: { index?: string }) {
               <div className="mt-7 flex flex-wrap items-center gap-3">
                 {[
                   { icon: Cake, label: "cake o'clock" },
-                  { icon: Gift, label: "surprises inside" },
+                  { icon: Gift, label: "hugs included" },
                   { icon: Heart, label: "100% handmade" },
                 ].map(({ icon: Icon, label }) => (
                   <span

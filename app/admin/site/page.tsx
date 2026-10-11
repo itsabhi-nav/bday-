@@ -15,7 +15,7 @@ const STEPS = [
   { id: "story", title: "Yaadein", hint: "Tumhari kahani" },
   { id: "letter", title: "Letter", hint: "Dil ki baat" },
   { id: "parts", title: "Parts", hint: "Kya-kya dikhe" },
-  { id: "gift", title: "Gift", hint: "Surprise + wish" },
+  { id: "gift", title: "Wish", hint: "Aakhri wish + secret" },
   { id: "done", title: "Bhejo", hint: "Link share karo" },
 ] as const;
 
@@ -28,7 +28,6 @@ const PART_LABELS: { key: keyof SiteData["sections"]; title: string; sub: string
   { key: "letter", title: "Love letter", sub: "Lamba khat" },
   { key: "distance", title: "Distance card", sub: "Door ho to bhi paas" },
   { key: "hug", title: "Hug button", sub: "Dabao, hug pahunchegi" },
-  { key: "surprise", title: "Gift box", sub: "Scratch coupon" },
   { key: "cake", title: "Cake + candles", sub: "Blow the candles" },
 ];
 
@@ -356,7 +355,7 @@ export default function SiteEditor() {
             {step === "story" && "Tumhari kahani likho"}
             {step === "letter" && "Dil ki baat, khat me"}
             {step === "parts" && "Page pe kya-kya dikhe?"}
-            {step === "gift" && "Gift + aakhri wish"}
+            {step === "gift" && "Aakhri wish likho"}
             {step === "done" && "Sab ready — use bhejo!"}
           </h1>
 
@@ -647,30 +646,7 @@ export default function SiteEditor() {
 
             {step === "gift" && (
               <>
-                <Q n="1" title="Gift box khulne pe?" sub="Title + 2 lines">
-                  <input
-                    className={inputCls}
-                    value={draft.surpriseSection.revealedTitle}
-                    onChange={(e) => set("surpriseSection", { ...draft.surpriseSection, revealedTitle: e.target.value })}
-                    placeholder="e.g. Scratch kar. Gift tera."
-                  />
-                  <textarea
-                    className={inputCls}
-                    rows={2}
-                    value={draft.surpriseSection.revealedBody}
-                    onChange={(e) => set("surpriseSection", { ...draft.surpriseSection, revealedBody: e.target.value })}
-                    placeholder="Gift kya hai? 2 lines me."
-                  />
-                </Q>
-                <Q n="2" title="Coupon pe kya likhe?" sub="Scratch karke ye niklega">
-                  <input
-                    className={inputCls}
-                    value={draft.surpriseSection.giftNote}
-                    onChange={(e) => set("surpriseSection", { ...draft.surpriseSection, giftNote: e.target.value })}
-                    placeholder="e.g. WEEKEND TRIP × UNLIMITED CHAI"
-                  />
-                </Q>
-                <Q n="3" title="Aakhri wish" sub="Cake ke baad dikhegi">
+                <Q n="1" title="Aakhri wish" sub="Cake ke baad dikhegi">
                   <textarea
                     className={inputCls}
                     rows={2}
@@ -685,7 +661,7 @@ export default function SiteEditor() {
                     placeholder="Aakhri line — e.g. Happy Birthday…"
                   />
                 </Q>
-                <Q n="4" title="Secret note" sub="Chhupa hua phool dabane pe milega" optional>
+                <Q n="2" title="Secret note" sub="Chhupa hua phool dabane pe milega" optional>
                   <textarea
                     className={inputCls}
                     rows={2}

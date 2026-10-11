@@ -6,7 +6,6 @@ import {
   coverPhotos,
   loveLetter,
   distanceSection,
-  surpriseSection,
   finaleSection,
   easterEgg,
   type TimelineItem,
@@ -28,7 +27,6 @@ export interface Sections {
   letter: boolean;
   distance: boolean;
   hug: boolean;
-  surprise: boolean;
   cake: boolean;
 }
 
@@ -56,7 +54,6 @@ export interface SiteData {
   coverHero: PhotoRef;
   loveLetter: typeof loveLetter;
   distanceSection: typeof distanceSection;
-  surpriseSection: typeof surpriseSection;
   finaleSection: typeof finaleSection;
   easterEgg: typeof easterEgg;
 }
@@ -68,7 +65,6 @@ export const DEFAULT_SECTIONS: Sections = {
   letter: true,
   distance: true,
   hug: true,
-  surprise: true,
   cake: true,
 };
 
@@ -98,7 +94,6 @@ export function defaultSiteData(slug = "demo", girlName?: string): SiteData {
     coverHero: { ...coverPhotos.hero },
     loveLetter: JSON.parse(JSON.stringify(loveLetter)),
     distanceSection: { ...distanceSection },
-    surpriseSection: { ...surpriseSection },
     finaleSection: { ...finaleSection },
     easterEgg: { ...easterEgg },
   };

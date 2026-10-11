@@ -11,7 +11,6 @@ import MemoryGallery from "@/components/chapters/MemoryGallery";
 import LoveLetter from "@/components/chapters/LoveLetter";
 import Distance from "@/components/chapters/Distance";
 import HugButton from "@/components/HugButton";
-import Surprise from "@/components/chapters/Surprise";
 import CakeFinale from "@/components/chapters/CakeFinale";
 import EasterEgg from "@/components/chapters/EasterEgg";
 import { TornDivider, Marquee } from "@/components/Ornaments";
@@ -133,19 +132,13 @@ export default function Journey({ data, autoEnter = false, preview = false }: Pr
               {s.distance && (
                 <>
                   <Distance index={nx()} />
-                  <TornDivider from="#FFF9F0" to="#FDF1DE" />
+                  <TornDivider from="#FFF9F0" to={s.hug ? "#FDF1DE" : s.cake ? "#3A2422" : "#FFF9F0"} />
                 </>
               )}
               {s.hug && (
                 <>
                   <HugButton />
-                  <TornDivider from="#FDF1DE" to="#F7DCE2" />
-                </>
-              )}
-              {s.surprise && (
-                <>
-                  <Surprise index={nx()} />
-                  <TornDivider from="#F7DCE2" to="#3A2422" />
+                  <TornDivider from="#FDF1DE" to={s.cake ? "#3A2422" : "#FFF9F0"} />
                 </>
               )}
               {s.cake && (
