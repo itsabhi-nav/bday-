@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Check, Loader2, Lock, PartyPopper } from "lucide-react";
 
@@ -27,7 +27,7 @@ const PLANS = [
 
 type PlanId = (typeof PLANS)[number]["id"];
 
-export default function BuyPage() {
+function BuyForm() {
   const router = useRouter();
   const params = useSearchParams();
   const [plan, setPlan] = useState<PlanId>((params.get("plan") as PlanId) || "deluxe");
@@ -235,5 +235,19 @@ export default function BuyPage() {
         </p>
       </div>
     </main>
+  );
+}
+
+export default function BuyPage() {
+  return (
+    <Suspense
+      fallback={
+        <main className="flex min-h-screen items-center justify-center bg-cream text-cocoa">
+          <p className="font-hand text-3xl">loading…</p>
+        </main>
+      }
+    >
+      <BuyForm />
+    </Suspense>
   );
 }
