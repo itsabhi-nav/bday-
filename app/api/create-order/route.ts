@@ -12,6 +12,7 @@ export async function POST(req: Request) {
   if (!amount || amount < 100) {
     return NextResponse.json({ error: "Invalid plan" }, { status: 400 });
   }
+  const planName = plan === "deluxe" ? "deluxe" : "classic";
 
   const keyId = process.env.RAZORPAY_KEY_ID;
   const keySecret = process.env.RAZORPAY_KEY_SECRET;
@@ -25,7 +26,7 @@ export async function POST(req: Request) {
       amount,
       currency: "INR",
       receipt: `order-${Date.now()}`,
-      notes: { plan },
+      notes: { plan: planName },
     })) as unknown as { id: string; amount: number; currency?: string };
     return NextResponse.json({
       order_id: order.id,
