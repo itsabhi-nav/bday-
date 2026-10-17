@@ -26,7 +26,7 @@ export async function POST(req: Request) {
       currency: "INR",
       receipt: `order-${Date.now()}`,
       notes: { plan },
-    })) as unknown as { id: string; amount: number; currency: string | null };
+    })) as unknown as { id: string; amount: number; currency?: string };
     return NextResponse.json({
       order_id: order.id,
       amount: order.amount,
