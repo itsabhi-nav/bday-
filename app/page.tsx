@@ -1,11 +1,9 @@
 import Link from "next/link";
 import {
   Heart, Gift, Images, MailOpen, Cake, Sparkles, Link2, Lock,
-  Check, ChevronDown, Send, Eye, ShieldCheck, Clock, Smartphone,
+  Check, ChevronDown, Eye, ShieldCheck, Clock, Smartphone,
 } from "lucide-react";
 import { Marquee, StickerBadge, FlowerDoodle } from "@/components/Ornaments";
-
-const ORDER_TEXT = encodeURIComponent("Hi! Mujhe apne kisi khaas ke birthday ke liye ek surprise page banwana hai ♥");
 
 function PhoneMockup() {
   return (
@@ -146,9 +144,9 @@ export default function StudioHome() {
           </h2>
           <div className="mt-10 grid gap-5 md:grid-cols-3">
             {[
-              { n: "1", t: "Order karo", d: "WhatsApp pe naam + 4-8 photos + 2-3 yaadein bhejo. Advance UPI pe." },
-              { n: "2", t: "Page banta hai", d: "24-48 hrs me uski private link ready. Preview dekh ke revision free." },
-              { n: "3", t: "Link bhejo", d: "Birthday wale din link forward karo. Reaction ka video bhejna mat bhoolna!" },
+              { n: "1", t: "Pay karo online", d: "UPI / card se ₹499 ya ₹999. Account turant ban jata hai — koi wait nahi." },
+              { n: "2", t: "Page banao", d: "Apne login se editor kholo — naam, photos, letter, sab step-by-step Hinglish me." },
+              { n: "3", t: "Link bhejo", d: "Birthday wale din uska private link forward karo. Reaction ka video bhejna mat bhoolna!" },
             ].map((s) => (
               <div key={s.n} className="relative border border-cocoa/15 bg-[#FFFDF7] p-6 shadow-photo">
                 <span className="font-display text-6xl font-semibold text-rose/60">{s.n}</span>
@@ -204,9 +202,9 @@ export default function StudioHome() {
                   </li>
                 ))}
               </ul>
-              <a href={`https://wa.me/?text=${ORDER_TEXT}+(Classic)`} target="_blank" rel="noreferrer" className="shadow-scrap-sm mt-7 flex items-center justify-center gap-2 rounded-full border-2 border-cocoa bg-ivory px-6 py-3 text-sm font-bold uppercase tracking-[0.16em] transition hover:bg-butter/60">
-                <Send className="h-4 w-4" aria-hidden /> Classic order karo
-              </a>
+              <Link href="/buy?plan=classic" className="shadow-scrap-sm mt-7 flex items-center justify-center gap-2 rounded-full border-2 border-cocoa bg-ivory px-6 py-3 text-sm font-bold uppercase tracking-[0.16em] transition hover:bg-butter/60">
+                <Lock className="h-4 w-4" aria-hidden /> Classic — pay ₹499
+              </Link>
             </div>
             <div className="relative rotate-1 border-2 border-cocoa bg-[#FFFDF7] p-8 shadow-photo">
               <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full bg-cherry px-4 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-ivory">
@@ -221,9 +219,9 @@ export default function StudioHome() {
                   </li>
                 ))}
               </ul>
-              <a href={`https://wa.me/?text=${ORDER_TEXT}+(Deluxe)`} target="_blank" rel="noreferrer" className="shadow-scrap mt-7 flex items-center justify-center gap-2 rounded-full bg-cherry px-6 py-3 text-sm font-bold uppercase tracking-[0.16em] text-ivory transition hover:bg-cherrydeep">
-                <Send className="h-4 w-4" aria-hidden /> Deluxe order karo
-              </a>
+              <Link href="/buy?plan=deluxe" className="shadow-scrap mt-7 flex items-center justify-center gap-2 rounded-full bg-cherry px-6 py-3 text-sm font-bold uppercase tracking-[0.16em] text-ivory transition hover:bg-cherrydeep">
+                <Lock className="h-4 w-4" aria-hidden /> Deluxe — pay ₹999
+              </Link>
             </div>
           </div>
           <p className="mt-6 text-center text-xs font-semibold uppercase tracking-[0.18em] text-cocoasoft">
